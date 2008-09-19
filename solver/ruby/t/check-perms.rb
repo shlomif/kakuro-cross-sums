@@ -25,4 +25,10 @@ describe "Kakuro" do
         ).should eql([1,2,3,4])
     end
 
+    it "internal->human transform for 7+9" do
+        @perm.internal_to_human(
+            (1 << (7-1)) | (1 << (9-1))
+        ).should eql([7,9])
+    end
+
 end
