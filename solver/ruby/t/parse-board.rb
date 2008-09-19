@@ -29,6 +29,15 @@ EOF
         @board.cell_yx(1,6).solid?.should_not
         @board.cell_yx(1,7).solid?.should
         @board.cell_yx(1,8).solid?.should
+        @board.cell_yx(8,0).solid?.should
+        @board.cell_yx(8,1).solid?.should
+        @board.cell_yx(8,2).solid?.should
+        @board.cell_yx(8,3).solid?.should_not
+        @board.cell_yx(8,4).solid?.should_not
+        @board.cell_yx(8,5).solid?.should
+        @board.cell_yx(8,6).solid?.should
+        @board.cell_yx(8,7).solid?.should
+        @board.cell_yx(8,8).solid?.should
     end
 
 end
