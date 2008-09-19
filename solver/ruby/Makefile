@@ -4,4 +4,4 @@ kakuro-perms-db.rb: gen-kakuro-perms-db.rb
 	ruby $< $@
 	
 test: all
-	spec t/*.rb
+	spec --color t/*.rb
