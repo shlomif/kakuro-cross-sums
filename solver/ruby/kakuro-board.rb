@@ -58,6 +58,8 @@ module Kakuro
         end
 
         def cell_yx(row,col)
+            # Uncomment for debugging:
+            # puts "Row = #{row} ; Col = #{col}"
             return @cells[@matrix[row][col]];
         end
 
