@@ -31,4 +31,8 @@ describe "Kakuro" do
         ).should eql([7,9])
     end
 
+    it "10/4 is 1,2,3,4" do
+        (@perm.get_perms(*@perm.human_to_internal(10,4)).map {|x| @perm.internal_to_human(x) }).should eql([[1,2,3,4]])
+    end
+
 end

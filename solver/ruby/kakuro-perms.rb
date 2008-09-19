@@ -1,3 +1,5 @@
+require "kakuro-perms-db.rb"
+
 module Kakuro
     class Perms
         def human_to_internal(sum, num)
@@ -15,6 +17,13 @@ module Kakuro
                 d += 1
             end
             return nums
+        end
+
+        def get_perms(sum, num)
+            return (
+                Kakuro::GENERATED_PERMS.has_key?(num) &&
+                Kakuro::GENERATED_PERMS[num].has_key?(sum)
+            ) ? Kakuro::GENERATED_PERMS[num][sum] : []
         end
     end
 end

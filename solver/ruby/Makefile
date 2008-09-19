@@ -1,4 +1,7 @@
-all:
+all: kakuro-perms-db.rb
 
-test:
+kakuro-perms-db.rb: gen-kakuro-perms-db.rb
+	ruby $< $@
+	
+test: all
 	spec t/*.rb
