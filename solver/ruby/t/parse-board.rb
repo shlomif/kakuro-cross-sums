@@ -16,8 +16,14 @@ describe "Parse 1" do
 EOF
     end
 
-    it "cell(0,0) is block" do
+    it "cells in 0th row are solid or not" do
         @board.cell_yx(0,0).solid?.should
+        @board.cell_yx(0,1).solid?.should
+        @board.cell_yx(0,2).solid?.should
+    end
+
+    it "cells in 1st row are solid or not" do
+        @board.cell_yx(1,2).solid?.should_not
     end
 end
 

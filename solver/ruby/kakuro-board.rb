@@ -42,7 +42,7 @@ module Kakuro
             # TODO : Make sure the widths of all the lines are the same.
             width = 0
             row = []
-            while line.sub!(/\A\s*\[([^\]]+)\]\s*/, "")
+            while line.sub!(/\A\s*\[([^\]]*)\]\s*/, "")
                 content = $1
 
                 cell = Cell.new(_next_cell_id(), content)
@@ -54,7 +54,7 @@ module Kakuro
                 row << cell.id
             end
             @width = width
-            @matrix << row
+            @matrix.push(row)
         end
 
         def cell_yx(row,col)
