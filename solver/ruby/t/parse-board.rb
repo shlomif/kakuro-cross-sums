@@ -16,15 +16,21 @@ describe "Parse 1" do
 EOF
     end
 
-    it "cells in 0th row are solid or not" do
+    it "cells are solid or not" do
         @board.cell_yx(0,0).solid?.should
         @board.cell_yx(0,1).solid?.should
         @board.cell_yx(0,2).solid?.should
+        @board.cell_yx(1,2).solid?.should_not
+        @board.cell_yx(1,3).solid?.should_not
+        @board.cell_yx(1,4).solid?.should
+        @board.cell_yx(1,5).solid?.should_not
+        @board.cell_yx(1,5).solid?.should_not
+        @board.cell_yx(1,6).solid?.should_not
+        @board.cell_yx(1,6).solid?.should_not
+        @board.cell_yx(1,7).solid?.should
+        @board.cell_yx(1,8).solid?.should
     end
 
-    it "cells in 1st row are solid or not" do
-        @board.cell_yx(1,2).solid?.should_not
-    end
 end
 
 
