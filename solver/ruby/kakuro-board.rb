@@ -1,5 +1,10 @@
 module Kakuro
 
+    class ParsingError < RuntimeError
+        def initialize()
+        end
+    end
+
     class Cell
 
         attr_reader :id
@@ -53,7 +58,15 @@ module Kakuro
 
                 row << cell.id
             end
-            @width = width
+
+            if (@width)
+                if (width != @width)
+                    raise ParsingError.new, \
+                        "width of rows (in cells) is not identical"
+                end
+            else
+                @width = width
+            end
             @matrix.push(row)
         end
 

@@ -9,6 +9,24 @@ class Object
     end
 end
 
+describe "Variable Width Board" do
+    it "should not be accepted with variable width" do
+        board = Kakuro::Board.new
+        got_exception = false
+        begin
+            board.parse(<<'EOF')
+[\3] [] []
+[\] []
+[\] [] []
+EOF
+
+        rescue Kakuro::ParsingError
+            got_exception = true
+        end
+        got_exception.ok()
+    end
+end
+
 describe "Parse 1" do
     before do
         @board = Kakuro::Board.new
@@ -50,6 +68,3 @@ EOF
     end
 
 end
-
-
-
