@@ -6,7 +6,7 @@ module Kakuro
 
         def initialize(id, content)
             @id = id
-            @is_solid = (content =~ /\\/)
+            @is_solid = (content =~ /\\/) ? true : false;
         end
 
         def solid?

@@ -1,5 +1,14 @@
 require "kakuro-board.rb"
 
+class Object
+    def ok()
+        self.should == true
+    end
+    def not_ok()
+        self.should == false
+    end
+end
+
 describe "Parse 1" do
     before do
         @board = Kakuro::Board.new
@@ -17,27 +26,27 @@ EOF
     end
 
     it "cells are solid or not" do
-        @board.cell_yx(0,0).solid?.should
-        @board.cell_yx(0,1).solid?.should
-        @board.cell_yx(0,2).solid?.should
-        @board.cell_yx(1,2).solid?.should_not
-        @board.cell_yx(1,3).solid?.should_not
-        @board.cell_yx(1,4).solid?.should
-        @board.cell_yx(1,5).solid?.should_not
-        @board.cell_yx(1,5).solid?.should_not
-        @board.cell_yx(1,6).solid?.should_not
-        @board.cell_yx(1,6).solid?.should_not
-        @board.cell_yx(1,7).solid?.should
-        @board.cell_yx(1,8).solid?.should
-        @board.cell_yx(8,0).solid?.should
-        @board.cell_yx(8,1).solid?.should
-        @board.cell_yx(8,2).solid?.should
-        @board.cell_yx(8,3).solid?.should_not
-        @board.cell_yx(8,4).solid?.should_not
-        @board.cell_yx(8,5).solid?.should
-        @board.cell_yx(8,6).solid?.should
-        @board.cell_yx(8,7).solid?.should
-        @board.cell_yx(8,8).solid?.should
+        @board.cell_yx(0,0).solid?.ok
+        @board.cell_yx(0,1).solid?.ok
+        @board.cell_yx(0,2).solid?.ok
+        @board.cell_yx(1,2).solid?.not_ok
+        @board.cell_yx(1,3).solid?.not_ok
+        @board.cell_yx(1,4).solid?.ok
+        @board.cell_yx(1,5).solid?.not_ok
+        @board.cell_yx(1,5).solid?.not_ok
+        @board.cell_yx(1,6).solid?.not_ok
+        @board.cell_yx(1,6).solid?.not_ok
+        @board.cell_yx(1,7).solid?.ok
+        @board.cell_yx(1,8).solid?.ok
+        @board.cell_yx(8,0).solid?.ok
+        @board.cell_yx(8,1).solid?.ok
+        @board.cell_yx(8,2).solid?.ok
+        @board.cell_yx(8,3).solid?.not_ok
+        @board.cell_yx(8,4).solid?.not_ok
+        @board.cell_yx(8,5).solid?.ok
+        @board.cell_yx(8,6).solid?.ok
+        @board.cell_yx(8,7).solid?.ok
+        @board.cell_yx(8,8).solid?.ok
     end
 
 end
