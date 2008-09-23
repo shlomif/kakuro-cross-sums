@@ -11,7 +11,7 @@ module Kakuro
 
     class Cell
 
-        attr_reader :id
+        attr_reader :id, :verdict
 
         def initialize(id, content)
             @id = id
@@ -24,8 +24,12 @@ module Kakuro
                 if $2.length > 0
                     @user_sums[Kakuro::Right] = $2.to_i();
                 end
-            else
+            elsif (content =~ /^\s*(\d*)\s*/)
+                digit = $1
                 @is_solid = false
+                if digit.length > 0
+                    @verdict = digit.to_i()
+                end
             end
         end
 

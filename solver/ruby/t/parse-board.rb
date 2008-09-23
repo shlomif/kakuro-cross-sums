@@ -67,7 +67,7 @@ EOF
         @board.cell_yx(8,8).solid?.ok
     end
 
-    it "should be the correct sum" do
+    it "should contain the correct sums" do
         @board.cell_yx(0,2).user_sum(Kakuro::Down).should == 29
         @board.cell_yx(0,3).user_sum(Kakuro::Down).should == 34
         @board.cell_yx(2,7).user_sum(Kakuro::Down).should == 3
@@ -78,5 +78,6 @@ EOF
         @board.cell_yx(0,0).user_sum(Kakuro::Right).should be_nil
         @board.cell_yx(0,0).user_sum(Kakuro::Down).should be_nil
         @board.cell_yx(2,0).user_sum(Kakuro::Down).should be_nil
+        @board.cell_yx(2,2).verdict.should == 5
     end
 end
