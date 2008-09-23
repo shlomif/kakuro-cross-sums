@@ -69,5 +69,7 @@ EOF
 
     it "should be the correct sum" do
         @board.cell_yx(0,2).user_sum(Kakuro::Down).should == 29
+        @board.cell_yx(0,3).user_sum(Kakuro::Down).should == 34
+        @board.cell_yx(2,7).user_sum(Kakuro::Down).should == 3
     end
 end
