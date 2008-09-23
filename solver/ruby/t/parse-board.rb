@@ -31,7 +31,7 @@ describe "Parse 1" do
     before do
         @board = Kakuro::Board.new
         @board.parse(<<'EOF')
-[\] [\] [29\] [\34\] [\] [21\] [8\] [\] [\]
+[\] [\] [29\] [34\] [\] [21\] [8\] [\] [\]
 [\] [10\17] [] [] [3\3] [] [] [\] [\]
 [\30] [] [5] [] [] [2] [] [3\] [11\]
 [\16] [] [] [6] [] [3] [12\11] [] []
@@ -67,4 +67,7 @@ EOF
         @board.cell_yx(8,8).solid?.ok
     end
 
+    it "should be the correct sum" do
+        @board.cell_yx(0,2).user_sum(Kakuro::Down).should == 29
+    end
 end

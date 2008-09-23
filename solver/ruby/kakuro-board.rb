@@ -1,4 +1,8 @@
 module Kakuro
+    
+    # Some constants
+    Down = Vert = 0
+    Right = Horiz = 1
 
     class ParsingError < RuntimeError
         def initialize()
@@ -11,6 +15,13 @@ module Kakuro
 
         def initialize(id, content)
             @id = id
+            @user_sums = []
+            if (content =~ /^\s*(\d*)\s*\\\s*$/)
+                @is_solid = true
+                if $1.length > 0
+                    @user_sums[Kakuro::Down] = $1.to_i();
+                end
+            end
             @is_solid = (content =~ /\\/) ? true : false;
         end
 
@@ -18,6 +29,9 @@ module Kakuro
             return @is_solid
         end
 
+        def user_sum(direction)
+            return @user_sums[direction]
+        end
     end
 
     class Board
