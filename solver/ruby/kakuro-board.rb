@@ -16,13 +16,17 @@ module Kakuro
         def initialize(id, content)
             @id = id
             @user_sums = []
-            if (content =~ /^\s*(\d*)\s*\\\s*$/)
+            if (content =~ /^\s*(\d*)\s*\\\s*(\d*)\s*$/)
                 @is_solid = true
                 if $1.length > 0
                     @user_sums[Kakuro::Down] = $1.to_i();
                 end
+                if $2.length > 0
+                    @user_sums[Kakuro::Right] = $2.to_i();
+                end
+            else
+                @is_solid = false
             end
-            @is_solid = (content =~ /\\/) ? true : false;
         end
 
         def solid?
