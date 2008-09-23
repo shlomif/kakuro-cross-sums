@@ -81,3 +81,14 @@ EOF
         @board.cell_yx(2,2).verdict.should == 5
     end
 end
+
+describe "Cells with errors (1)" do
+    it "should throw an exception" do
+        board = Kakuro::Board.new
+        lambda {
+            board.parse(<<'EOF')
+[3forward]
+EOF
+        }.should raise_error(Kakuro::ParsingError)
+    end
+end
