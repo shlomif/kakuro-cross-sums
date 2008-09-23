@@ -73,5 +73,10 @@ EOF
         @board.cell_yx(2,7).user_sum(Kakuro::Down).should == 3
         @board.cell_yx(1,1).user_sum(Kakuro::Down).should == 10
         @board.cell_yx(1,1).user_sum(Kakuro::Right).should == 17
+        @board.cell_yx(2,0).user_sum(Kakuro::Right).should == 30
+        @board.cell_yx(0,2).user_sum(Kakuro::Right).should be_nil
+        @board.cell_yx(0,0).user_sum(Kakuro::Right).should be_nil
+        @board.cell_yx(0,0).user_sum(Kakuro::Down).should be_nil
+        @board.cell_yx(2,0).user_sum(Kakuro::Down).should be_nil
     end
 end
