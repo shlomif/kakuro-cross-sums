@@ -84,6 +84,14 @@ module Kakuro
                 row << cell.id
             end
 
+            # Remove trailing space.
+            line.sub!(/\A\s*/, "");
+            # Die if there's junk after the line.
+            if line.length > 0
+                raise ParsingError.new, \
+                    "Junk after line"
+            end
+
             if (@width)
                 if (width != @width)
                     raise ParsingError.new, \

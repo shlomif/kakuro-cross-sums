@@ -92,3 +92,16 @@ EOF
         }.should raise_error(Kakuro::ParsingError)
     end
 end
+
+describe "Junk after line" do
+    it "should throw an exception" do
+        board = Kakuro::Board.new
+        lambda {
+            board.parse(<<'EOF')
+[\] [\] [29\] [34\] [\] [21\] [8\] [\] [\]
+[\] [10\17] [] [] [3\3] [] [] [\] [\] This is wrong.
+[\30] [] [5] [] [] [2] [] [3\] [11\]
+EOF
+        }.should raise_error(Kakuro::ParsingError)
+    end
+end
