@@ -1,3 +1,5 @@
+require "kakuro-perms.rb"
+
 module Kakuro
     
     # Some constants
@@ -9,6 +11,15 @@ module Kakuro
         end
     end
 
+    class Constraint
+        attr_reader :num_cells, :sum
+
+        def initialize(sum, num_cells)
+            @sum = sum
+            @num_cells = num_cells
+        end
+    end
+
     class Cell
 
         attr_reader :id, :verdict
@@ -16,6 +27,8 @@ module Kakuro
         def initialize(id, content)
             @id = id
             @user_sums = []
+            @control_cells = []
+            @constraints = []
             if (content =~ /^\s*(\d*)\s*\\\s*(\d*)\s*$/)
                 @is_solid = true
                 if $1.length > 0
@@ -43,6 +56,22 @@ module Kakuro
         def user_sum(direction)
             return @user_sums[direction]
         end
+
+        def set_control(direction, y, x)
+            @control_cells[direction] = [y,x]
+        end
+
+        def set_num_cells(dir, num_cells)
+            @constraints[dir] = Constraint.new(
+                *(Kakuro::Perms.new.human_to_internal(
+                    user_sum(dir), num_cells
+                ))
+            )
+        end
+
+        def constraint(dir)
+            return @constraints[dir]
+        end
     end
 
     class Board
@@ -60,6 +89,7 @@ module Kakuro
             board_string.split(/\n+/).each do |line|
                 _parse_line(line)
             end
+            @height = @matrix.length
         end
 
         def _next_cell_id()
@@ -107,6 +137,61 @@ module Kakuro
             # Uncomment for debugging:
             # puts "Row = #{row} ; Col = #{col}"
             return @cells[@matrix[row][col]];
+        end
+
+        def prepare()
+            (0 .. (@height-1)).each do |y|
+                (0 .. (@width-1)).each do |x|
+                    
+                    if cell_yx(y,x).solid?
+                        _calc_cell_constraints(y,x)
+                    end
+                end
+            end
+        end
+
+        def get_dir_iter(y,x,dir)
+            if (dir == Down)
+                return lambda { 
+                    if (y == @height-1)
+                        return false
+                    else
+                        y += 1
+                        return [y,x]
+                    end
+                }
+            else
+                return lambda {
+                    if (x == @width-1)
+                        return false
+                    else
+                        x += 1
+                        return [y,x]
+                    end
+                }
+            end
+        end
+
+        def _calc_cell_constraints(y,x)
+            solid_cell = cell_yx(y,x)
+
+            for dir in [Down, Right]
+                user_sum = solid_cell.user_sum(dir)
+
+                if user_sum
+                    count = 0
+                    iter = get_dir_iter(y,x,dir)
+                    pos = iter.call()
+                    while (pos && (! cell_yx(*pos).solid?))
+                        count += 1
+                        cell_yx(*pos).set_control(dir, y, x)
+                        pos = iter.call()
+                    end
+                    iter = nil
+
+                    solid_cell.set_num_cells(dir, count)
+                end
+            end
         end
 
     end
