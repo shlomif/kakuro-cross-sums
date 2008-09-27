@@ -124,7 +124,12 @@ EOF
     end
 
     it "should give the right constraints" do
+
         @board.cell_yx(1,1).constraint(Kakuro::Down).num_cells.should == 2
         @board.cell_yx(1,1).constraint(Kakuro::Down).sum.should == 8
+
+        @board.cell_yx(1,1).constraint(Kakuro::Right).num_cells.should == 2
+        @board.cell_yx(1,1).constraint(Kakuro::Right).sum.should == 15
+
     end
 end
