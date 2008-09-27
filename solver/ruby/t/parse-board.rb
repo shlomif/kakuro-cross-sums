@@ -135,5 +135,11 @@ EOF
         @board.cell_yx(1,2).control_cell(Kakuro::Vert).should == [0,2]
         @board.cell_yx(3,1).control_cell(Kakuro::Vert).should == [1,1]
 
+        # Testing for out-of-board constraints.
+        @board.cell_yx(4,4).constraint(Kakuro::Right).num_cells.should == 4
+        @board.cell_yx(4,4).constraint(Kakuro::Right).sum.should == 6
+
+        @board.cell_yx(6,3).constraint(Kakuro::Down).num_cells.should == 2
+        @board.cell_yx(6,3).constraint(Kakuro::Down).sum.should == 1
     end
 end
