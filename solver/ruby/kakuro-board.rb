@@ -61,6 +61,10 @@ module Kakuro
             @control_cells[direction] = [y,x]
         end
 
+        def control_cell(dir)
+            return @control_cells[dir]
+        end
+
         def set_num_cells(dir, num_cells)
             @constraints[dir] = Constraint.new(
                 *(Kakuro::Perms.new.human_to_internal(

@@ -131,5 +131,9 @@ EOF
         @board.cell_yx(1,1).constraint(Kakuro::Right).num_cells.should == 2
         @board.cell_yx(1,1).constraint(Kakuro::Right).sum.should == 15
 
+        @board.cell_yx(1,2).control_cell(Kakuro::Horiz).should == [1,1]
+        @board.cell_yx(1,2).control_cell(Kakuro::Vert).should == [0,2]
+        @board.cell_yx(3,1).control_cell(Kakuro::Vert).should == [1,1]
+
     end
 end
