@@ -238,6 +238,19 @@ module Kakuro
         def possible_cell_values
             return @possible_cell_values
         end
+
+        Verdicts_Map = (1 .. 9).map { |x| x-1 }.inject({}) { 
+            |h, n| h[1 << n] = n ; h
+        }
+
+        def has_single_verdict
+            if Verdicts_Map.has_key?(@possible_cell_values)
+                return Verdicts_Map[@possible_cell_values]
+            else
+                return false
+            end
+        end
+
     end
 
 end

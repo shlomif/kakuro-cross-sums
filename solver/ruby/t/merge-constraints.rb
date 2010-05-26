@@ -26,6 +26,8 @@ describe "Merge Two Constraints" do
             [(1 << 0)|(1 << 1)]
 
         merger.possible_cell_values.should == (1 << 0)
+
+        merger.has_single_verdict.should == 0
     end
 end
 
