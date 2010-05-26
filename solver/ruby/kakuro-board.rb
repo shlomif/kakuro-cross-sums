@@ -203,6 +203,10 @@ module Kakuro
             end
         end
 
+        def merge_constraints
+
+        end
+
     end
 
     class CellConstraintsMerger
