@@ -1,4 +1,5 @@
 require "kakuro-perms.rb"
+require "kakuro-perms-db.rb"
 
 module Kakuro
     
@@ -17,6 +18,10 @@ module Kakuro
         def initialize(sum, num_cells)
             @sum = sum
             @num_cells = num_cells
+        end
+
+        def as_list
+            return Kakuro::GENERATED_PERMS[@num_cells][@sum]
         end
     end
 
@@ -198,6 +203,32 @@ module Kakuro
             end
         end
 
+    end
+
+    class CellConstraintsMerger
+        def initialize(args)
+            @constraints = args['constraints']
+            calc_dir_constraints()
+        end
+
+        def calc_dir_constraints
+            remaining_constraints = []
+            [Vert, Horiz].each { |dir|
+                other_dir = 1 - dir
+                total_mask = @constraints[other_dir].as_list.inject(0) {
+                    |total, x| (total | x)
+                }
+                remaining_constraints[dir] = @constraints[dir].as_list.select { 
+                    |constraint| ((constraint & total_mask) != 0)
+                }
+            }
+
+            @remaining_constraints = remaining_constraints
+        end
+
+        def remaining_dir_constraints(dir)
+            return @remaining_constraints[dir]         
+        end
     end
 
 end
