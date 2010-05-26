@@ -211,23 +211,32 @@ module Kakuro
             calc_dir_constraints()
         end
 
+        def combine_masks(masks_a)
+            return masks_a.inject(0) { |total, x| (total | x) }
+        end
+
         def calc_dir_constraints
-            remaining_constraints = []
+            @total_masks = []
+            @remaining_constraints = []
             [Vert, Horiz].each { |dir|
                 other_dir = 1 - dir
-                total_mask = @constraints[other_dir].as_list.inject(0) {
-                    |total, x| (total | x)
-                }
-                remaining_constraints[dir] = @constraints[dir].as_list.select { 
-                    |constraint| ((constraint & total_mask) != 0)
-                }
+                t_mask = @total_masks[other_dir] = 
+                    combine_masks(@constraints[other_dir].as_list)
+                @remaining_constraints[dir] = \
+                    @constraints[dir].as_list.select { 
+                        |constraint| ((constraint & t_mask) != 0)
+                    }
             }
 
-            @remaining_constraints = remaining_constraints
+            @possible_cell_values = @total_masks[Vert] & @total_masks[Horiz]
         end
 
         def remaining_dir_constraints(dir)
             return @remaining_constraints[dir]         
+        end
+
+        def possible_cell_values
+            return @possible_cell_values
         end
     end
 

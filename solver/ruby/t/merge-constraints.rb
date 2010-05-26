@@ -24,6 +24,8 @@ describe "Merge Two Constraints" do
             [(1 << 0)|(1 << 2)]
         merger.remaining_dir_constraints(Kakuro::Horiz).should == \
             [(1 << 0)|(1 << 1)]
+
+        merger.possible_cell_values.should == (1 << 0)
     end
 end
 
