@@ -11,8 +11,8 @@ end
 
 describe "Merge Two Constraints" do
     it "[1,2] and [1,3] should be merged" do
-        vert = Kakuro::Constraint.new(2,2)
-        horiz = Kakuro::Constraint.new(1,2)
+        vert = Kakuro::Constraint.new(2,2).as_list
+        horiz = Kakuro::Constraint.new(1,2).as_list
 
         merger = Kakuro::CellConstraintsMerger.new(
             :constraints => [vert,horiz,]
@@ -33,10 +33,10 @@ describe "[[1,2]] and [[1,8],[2,7],[3,6],[4,5]]" do
     it "should be merged" do
         vert = Kakuro::Constraint.new(
             *Kakuro::Perms.new.human_to_internal(3,2)
-        )
+        ).as_list
         horiz = Kakuro::Constraint.new(
             *Kakuro::Perms.new.human_to_internal(9,2)
-        )
+        ).as_list
 
         merger = Kakuro::CellConstraintsMerger.new(
             :constraints => [vert,horiz,]

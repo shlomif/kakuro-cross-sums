@@ -26,6 +26,7 @@ EOF
     end
 
     it "should merge constraints correctly" do
+        @board.prepare()
         @board.merge_constraints()
     end
 

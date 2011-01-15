@@ -81,7 +81,7 @@ EOF
         @board.cell(Position.new(:x => 0, :y => 0)).user_sum(Kakuro::Right).should be_nil
         @board.cell(Position.new(:x => 0, :y => 0)).user_sum(Kakuro::Down).should be_nil
         @board.cell(Position.new(:x => 0, :y => 2)).user_sum(Kakuro::Down).should be_nil
-        @board.cell(Position.new(:x => 2, :y => 2)).verdict.should == 5
+        @board.cell(Position.new(:x => 2, :y => 2)).human_verdict.should == 5
     end
 end
 
@@ -128,11 +128,11 @@ EOF
 
     it "should give the right constraints" do
 
-        @board.cell(Position.new(:x => 1, :y => 1)).constraint(Kakuro::Down).num_cells.should == 2
-        @board.cell(Position.new(:x => 1, :y => 1)).constraint(Kakuro::Down).sum.should == 8
+        @board.cell(Position.new(:x => 1, :y => 1)).init_constraint(Kakuro::Down).num_cells.should == 2
+        @board.cell(Position.new(:x => 1, :y => 1)).init_constraint(Kakuro::Down).sum.should == 8
 
-        @board.cell(Position.new(:x => 1, :y => 1)).constraint(Kakuro::Right).num_cells.should == 2
-        @board.cell(Position.new(:x => 1, :y => 1)).constraint(Kakuro::Right).sum.should == 15
+        @board.cell(Position.new(:x => 1, :y => 1)).init_constraint(Kakuro::Right).num_cells.should == 2
+        @board.cell(Position.new(:x => 1, :y => 1)).init_constraint(Kakuro::Right).sum.should == 15
 
         @board.cell(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Horiz).x.should == 1
         @board.cell(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Horiz).y.should == 1
@@ -142,10 +142,10 @@ EOF
         @board.cell(Position.new(:x => 1, :y => 3)).control_cell(Kakuro::Vert).y.should == 1
 
         # Testing for out-of-board constraints.
-        @board.cell(Position.new(:x => 4, :y => 4)).constraint(Kakuro::Right).num_cells.should == 4
-        @board.cell(Position.new(:x => 4, :y => 4)).constraint(Kakuro::Right).sum.should == 6
+        @board.cell(Position.new(:x => 4, :y => 4)).init_constraint(Kakuro::Right).num_cells.should == 4
+        @board.cell(Position.new(:x => 4, :y => 4)).init_constraint(Kakuro::Right).sum.should == 6
 
-        @board.cell(Position.new(:x => 3, :y => 6)).constraint(Kakuro::Down).num_cells.should == 2
-        @board.cell(Position.new(:x => 3, :y => 6)).constraint(Kakuro::Down).sum.should == 1
+        @board.cell(Position.new(:x => 3, :y => 6)).init_constraint(Kakuro::Down).num_cells.should == 2
+        @board.cell(Position.new(:x => 3, :y => 6)).init_constraint(Kakuro::Down).sum.should == 1
     end
 end

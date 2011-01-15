@@ -50,6 +50,8 @@ module Kakuro
             @user_sums = []
             @control_cells = []
             @constraints = []
+            @init_constraints = []
+            @dirty = false
             if (content =~ /^\s*(\d*)\s*\\\s*(\d*)\s*$/)
                 @is_solid = true
                 if $1.length > 0
@@ -61,8 +63,10 @@ module Kakuro
             elsif (content =~ /^\s*(\d*)\s*$/)
                 digit = $1
                 @is_solid = false
+                @verdicts_mask = ((1 << 10) - 1)
                 if digit.length > 0
-                    @verdict = digit.to_i()
+                    @verdict = digit.to_i()-1
+                    @verdicts_mask = 1 << @verdict
                 end
             else
                 raise ParsingError.new, \
@@ -87,15 +91,54 @@ module Kakuro
         end
 
         def set_num_cells(dir, num_cells)
-            @constraints[dir] = Constraint.new(
+            @init_constraints[dir] = Constraint.new(
                 *(Kakuro::Perms.new.human_to_internal(
                     user_sum(dir), num_cells
                 ))
             )
+            @constraints[dir] = @init_constraints[dir].as_list
         end
 
         def constraint(dir)
             return @constraints[dir]
+        end
+
+        def init_constraint(dir)
+            return @init_constraints[dir]
+        end
+
+        def set_new_constraint(dir, constraint)
+            if constraint.length < @constraints[dir].length
+                @dirty = true
+            end
+
+            @constraints[dir] = constraint
+
+            return
+        end
+
+        def get_possible_verdicts
+            return [0 .. 8].select { |x| (@verdicts_mask & (1 << x)) != 0 }
+        end
+
+        def set_possible_verdicts(verdicts)
+            if (verdicts != @verdicts_mask)
+                @dirty = true
+            end
+
+            @verdicts_mask = verdicts
+
+            return
+        end
+
+        def flush_dirty
+            ret = @dirty
+            @dirty = false
+            return ret
+        end
+
+        def human_verdict
+            return verdict+1
         end
     end
 
@@ -239,9 +282,43 @@ module Kakuro
         end
 
         def merge_constraints
+            dirty = true
+            while dirty
+                dirty = false
+                all_coords.each do |pos|
+                    mycell = cell(pos)
+                    if (! mycell.solid?) then
 
+                        control_cells = []
+                        constraints = []
+
+                        [Vert, Horiz].each do |dir|
+                            control_cells[dir] = cell(mycell.control_cell(dir))
+                            constraints[dir] = control_cells[dir].constraint(dir)
+                        end
+
+                        merger = CellConstraintsMerger.new(
+                            :constraints => constraints
+                        )
+
+                        [Vert, Horiz].each do |dir|
+                            control_cells[dir].set_new_constraint(
+                                dir, 
+                                merger.remaining_dir_constraints(dir)
+                            )
+                        end
+
+                        mycell.set_possible_verdicts(
+                            merger.possible_cell_values
+                        )
+
+                        if (mycell.flush_dirty)
+                            dirty = true
+                        end
+                    end
+                end
+            end
         end
-
     end
 
     class CellConstraintsMerger
@@ -260,9 +337,9 @@ module Kakuro
             [Vert, Horiz].each { |dir|
                 other_dir = 1 - dir
                 t_mask = @total_masks[other_dir] = 
-                    combine_masks(@constraints[other_dir].as_list)
+                    combine_masks(@constraints[other_dir])
                 @remaining_constraints[dir] = \
-                    @constraints[dir].as_list.select { 
+                    @constraints[dir].select { 
                         |constraint| ((constraint & t_mask) != 0)
                     }
             }
