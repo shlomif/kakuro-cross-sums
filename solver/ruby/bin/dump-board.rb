@@ -1,6 +1,8 @@
 require "kakuro-board.rb"
 
+puts "Before new"
 $BOARD = Kakuro::Board.new
+puts "After new"
 $BOARD.parse(<<'EOF')
 [\]    [\]      [29\]  [34\]   [\]      [21\]  [8\]     [\]    [\]
 [\]    [10\17]  []     []      [3\3]    []     []       [\]    [\]
@@ -12,9 +14,11 @@ $BOARD.parse(<<'EOF')
 [\]    [\]      [\6]   []      []       [\11]  []       []     [\]
 [\]    [\]      [\3]   []      []       [\]    [\]      [\]    [\]
 EOF
-
+puts "After parse"
 $BOARD.prepare()
+puts "After prepare"
 $BOARD.merge_constraints()
+puts "After merge_constraints"
 $BOARD.all_coords.each do |pos|
     if (pos.x == 0)
         print "\n"

@@ -117,7 +117,7 @@ module Kakuro
 
             @constraints[dir] = constraint
 
-            return
+            return flush_dirty
         end
 
         def get_possible_verdicts
@@ -125,11 +125,44 @@ module Kakuro
         end
 
         def set_possible_verdicts(verdicts)
-            if (verdicts != @verdicts_mask)
+            changed = (verdicts != @verdicts_mask)
+            if changed
                 @dirty = true
             end
 
             @verdicts_mask = verdicts
+
+            return changed
+        end
+
+        def filter_constraint(dir, verdict)
+            # puts "Filtering #{dir} with #{verdict}"
+            @constraints[dir] = @constraints[dir].map { |x| 
+                # puts "Old x : #{x} ; New x : #{x & (~(1 << verdict))}"
+                x & (~(1 << verdict)) 
+
+            }
+            @dirty = true
+        end
+
+        def _set_conslusive_verdict(verdict)
+            @verdict = verdict
+
+            DIRS.each do |dir|
+                _board_control_cells[dir].filter_constraint(dir, verdict);
+            end
+        end
+
+        Verdicts_Map = (1 .. 9).map { |x| x-1 }.inject({}) { 
+            |h, n| h[1 << n] = n ; h
+        }
+
+        def _set_possible_verdicts_with_propagation(verdicts)
+            if set_possible_verdicts(verdicts)
+                if (Verdicts_Map.has_key?(@verdicts_mask))
+                    _set_conslusive_verdict(Verdicts_Map[@verdicts_mask])
+                end
+            end
 
             return
         end
@@ -160,17 +193,22 @@ module Kakuro
             )
 
             DIRS.each do |dir|
-                _board_control_cells[dir].set_new_constraint(
-                    dir, 
+                ret = _board_control_cells[dir].set_new_constraint(
+                    dir,
                     merger.remaining_dir_constraints(dir)
                 )
+                @dirty ||= ret
             end
 
-            set_possible_verdicts(
+            _set_possible_verdicts_with_propagation(
                 merger.possible_cell_values
             )
 
             return flush_dirty
+        end
+
+        def is_known?
+            return @verdict
         end
     end
 
@@ -264,7 +302,9 @@ module Kakuro
         end
 
         def coords_to_fill
-            return all_coords.select { |pos| not cell(pos).solid? }
+            return all_coords.select { |pos| 
+                (!cell(pos).solid?) && (!cell(pos).is_known?)
+            }
         end
 
         def prepare()
