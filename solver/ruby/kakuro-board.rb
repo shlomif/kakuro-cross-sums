@@ -233,6 +233,10 @@ module Kakuro
             return all_coords.select { |pos| cell(pos).solid? }
         end
 
+        def coords_to_fill
+            return all_coords.select { |pos| not cell(pos).solid? }
+        end
+
         def prepare()
             solid_coords.each do |pos|
                 _calc_cell_constraints(pos)
@@ -287,37 +291,34 @@ module Kakuro
             dirty = true
             while dirty
                 dirty = false
-                all_coords.each do |pos|
+                coords_to_fill.each do |pos|
                     mycell = cell(pos)
-                    if (! mycell.solid?) then
+                    control_cells = []
+                    constraints = []
 
-                        control_cells = []
-                        constraints = []
+                    DIRS.each do |dir|
+                        control_cells[dir] = cell(mycell.control_cell(dir))
+                        constraints[dir] = control_cells[dir].constraint(dir)
+                    end
 
-                        DIRS.each do |dir|
-                            control_cells[dir] = cell(mycell.control_cell(dir))
-                            constraints[dir] = control_cells[dir].constraint(dir)
-                        end
+                    merger = CellConstraintsMerger.new(
+                        :constraints => constraints,
+                        :cell_values => mycell.verdicts_mask
+                    )
 
-                        merger = CellConstraintsMerger.new(
-                            :constraints => constraints,
-                            :cell_values => mycell.verdicts_mask
+                    DIRS.each do |dir|
+                        control_cells[dir].set_new_constraint(
+                            dir, 
+                            merger.remaining_dir_constraints(dir)
                         )
+                    end
 
-                        DIRS.each do |dir|
-                            control_cells[dir].set_new_constraint(
-                                dir, 
-                                merger.remaining_dir_constraints(dir)
-                            )
-                        end
+                    mycell.set_possible_verdicts(
+                        merger.possible_cell_values
+                    )
 
-                        mycell.set_possible_verdicts(
-                            merger.possible_cell_values
-                        )
-
-                        if (mycell.flush_dirty)
-                            dirty = true
-                        end
+                    if (mycell.flush_dirty)
+                        dirty = true
                     end
                 end
             end
