@@ -81,6 +81,14 @@ module Kakuro
             return @is_solid
         end
 
+        def fillable?
+            return !solid?
+        end
+
+        def to_be_filled?
+            return (fillable? && (! is_known?))
+        end
+
         def user_sum(direction)
             return @user_sums[direction]
         end
@@ -302,9 +310,7 @@ module Kakuro
         end
 
         def coords_to_fill
-            return all_coords.select { |pos| 
-                (!cell(pos).solid?) && (!cell(pos).is_known?)
-            }
+            return all_coords.select { |pos| cell(pos).to_be_filled? }
         end
 
         def prepare()
