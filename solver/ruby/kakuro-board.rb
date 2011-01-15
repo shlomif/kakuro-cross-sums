@@ -31,6 +31,14 @@ module Kakuro
             @x = options[:x] or raise "x not given"
             @y = options[:y] or raise "y not given"
         end
+
+        def bump_x
+            return Position.new(:x => x+1, :y => y)
+        end
+
+        def bump_y
+            return Position.new(:x => x, :y => y+1)
+        end
     end
 
     class Cell
@@ -168,23 +176,23 @@ module Kakuro
             end
         end
 
-        def get_dir_iter(y,x,dir)
+        def get_dir_iter(pos,dir)
             if (dir == Down)
                 return lambda { 
-                    if (y == @height-1)
+                    if (pos.y == @height-1)
                         return false
                     else
-                        y += 1
-                        return Position.new(:x => x, :y => y)
+                        pos = pos.bump_y
+                        return pos
                     end
                 }
             else
                 return lambda {
-                    if (x == @width-1)
+                    if (pos.x == @width-1)
                         return false
                     else
-                        x += 1
-                        return Position.new(:x => x, :y => y)
+                        pos = pos.bump_x
+                        return pos
                     end
                 }
             end
@@ -198,7 +206,7 @@ module Kakuro
 
                 if user_sum
                     count = 0
-                    iter = get_dir_iter(init_pos.y,init_pos.x,dir)
+                    iter = get_dir_iter(init_pos, dir)
                     pos = iter.call()
                     while (pos && (! cell_yx(pos).solid?))
                         count += 1
