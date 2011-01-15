@@ -313,7 +313,6 @@ module Kakuro
                 merger.possible_cell_values
             )
 
-
             dirty ||= mycell.flush_dirty
         end
 
