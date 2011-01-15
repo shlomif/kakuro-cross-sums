@@ -244,7 +244,7 @@ module Kakuro
 
     class CellConstraintsMerger
         def initialize(args)
-            @constraints = args['constraints']
+            @constraints = args[:constraints]
             calc_dir_constraints()
         end
 

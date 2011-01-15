@@ -15,9 +15,7 @@ describe "Merge Two Constraints" do
         horiz = Kakuro::Constraint.new(1,2)
 
         merger = Kakuro::CellConstraintsMerger.new(
-            {
-                'constraints' => [vert,horiz,],
-            }
+            :constraints => [vert,horiz,]
         )
         
         merger.remaining_dir_constraints(Kakuro::Vert).should == \
@@ -41,9 +39,7 @@ describe "[[1,2]] and [[1,8],[2,7],[3,6],[4,5]]" do
         )
 
         merger = Kakuro::CellConstraintsMerger.new(
-            {
-                'constraints' => [vert,horiz,],
-            }
+            :constraints => [vert,horiz,]
         )
         
         merger.remaining_dir_constraints(Kakuro::Vert).should == \
