@@ -157,7 +157,7 @@ module Kakuro
             @dirty = true
         end
 
-        def _set_conclusive_verdict
+        def _propagate_conclusive_verdict
             DIRS.each do |dir|
                 _board_control_cells[dir].filter_constraint(dir, verdict);
             end
@@ -171,7 +171,7 @@ module Kakuro
             if set_possible_verdicts(verdicts)
                 if (Verdicts_Map.has_key?(@verdicts_mask))
                     @verdict = Verdicts_Map[@verdicts_mask]
-                    _set_conclusive_verdict
+                    _propagate_conclusive_verdict
                 end
             end
 
@@ -325,7 +325,7 @@ module Kakuro
                 _calc_cell_constraints(pos)
             end
             filled_coords.each do |pos|
-                cell(pos)._set_conclusive_verdict
+                cell(pos)._propagate_conclusive_verdict
             end
         end
 
