@@ -45,9 +45,10 @@ module Kakuro
 
     class Cell
 
-        attr_reader :id, :verdict, :verdicts_mask
+        attr_reader :board, :id, :verdict, :verdicts_mask
 
-        def initialize(id, content)
+        def initialize(board, id, content)
+            @board = board
             @id = id
             @user_sums = []
             @control_cells = []
@@ -142,6 +143,34 @@ module Kakuro
         def human_verdict
             return verdict+1
         end
+
+        def _merge_constraints_step
+            control_cells = []
+            constraints = []
+
+            DIRS.each do |dir|
+                control_cells[dir] = board.cell(control_cell(dir))
+                constraints[dir] = control_cells[dir].constraint(dir)
+            end
+
+            merger = CellConstraintsMerger.new(
+                :constraints => constraints,
+                :cell_values => verdicts_mask
+            )
+
+            DIRS.each do |dir|
+                control_cells[dir].set_new_constraint(
+                    dir, 
+                    merger.remaining_dir_constraints(dir)
+                )
+            end
+
+            set_possible_verdicts(
+                merger.possible_cell_values
+            )
+
+            return flush_dirty
+        end
     end
 
     class Board
@@ -175,7 +204,7 @@ module Kakuro
             while line.sub!(/\A\s*\[([^\]]*)\]\s*/, "")
                 content = $1
 
-                cell = Cell.new(_next_cell_id(), content)
+                cell = Cell.new(self, _next_cell_id(), content)
 
                 @cells << cell
 
@@ -288,32 +317,7 @@ module Kakuro
         end
 
         def _merge_constraint_cell_step(pos)
-            mycell = cell(pos)
-            control_cells = []
-            constraints = []
-
-            DIRS.each do |dir|
-                control_cells[dir] = cell(mycell.control_cell(dir))
-                constraints[dir] = control_cells[dir].constraint(dir)
-            end
-
-            merger = CellConstraintsMerger.new(
-                :constraints => constraints,
-                :cell_values => mycell.verdicts_mask
-            )
-
-            DIRS.each do |dir|
-                control_cells[dir].set_new_constraint(
-                    dir, 
-                    merger.remaining_dir_constraints(dir)
-                )
-            end
-
-            mycell.set_possible_verdicts(
-                merger.possible_cell_values
-            )
-
-            dirty ||= mycell.flush_dirty
+            return cell(pos)._merge_constraints_step
         end
 
         def _merge_constraints_scan
