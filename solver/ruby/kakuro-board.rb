@@ -86,7 +86,11 @@ module Kakuro
         end
 
         def to_be_filled?
-            return (fillable? && (! is_known?))
+            return (fillable? && (! _known?))
+        end
+
+        def filled?
+            return (fillable? && _known?)
         end
 
         def user_sum(direction)
@@ -215,7 +219,7 @@ module Kakuro
             return flush_dirty
         end
 
-        def is_known?
+        def _known?
             return @verdict
         end
     end
@@ -319,7 +323,7 @@ module Kakuro
             end
             all_coords.each do |pos|
                 mycell = cell(pos)
-                if (!mycell.solid? and mycell.is_known?)
+                if mycell.filled?
                     mycell._set_conslusive_verdict(mycell.verdict)
                 end
             end
