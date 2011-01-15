@@ -157,7 +157,7 @@ module Kakuro
             @dirty = true
         end
 
-        def _set_conslusive_verdict(verdict)
+        def _set_conclusive_verdict(verdict)
             @verdict = verdict
 
             DIRS.each do |dir|
@@ -172,7 +172,7 @@ module Kakuro
         def _set_possible_verdicts_with_propagation(verdicts)
             if set_possible_verdicts(verdicts)
                 if (Verdicts_Map.has_key?(@verdicts_mask))
-                    _set_conslusive_verdict(Verdicts_Map[@verdicts_mask])
+                    _set_conclusive_verdict(Verdicts_Map[@verdicts_mask])
                 end
             end
 
@@ -326,7 +326,7 @@ module Kakuro
                 _calc_cell_constraints(pos)
             end
             filled_coords.each do |pos|
-                cell(pos)._set_conslusive_verdict(cell(pos).verdict)
+                cell(pos)._set_conclusive_verdict(cell(pos).verdict)
             end
         end
 
