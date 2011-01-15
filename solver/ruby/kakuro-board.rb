@@ -144,12 +144,16 @@ module Kakuro
             return verdict+1
         end
 
+        def _board_control_cells
+            return @control_cells.map { |pos| board.cell(pos) }
+        end
+
         def _merge_constraints_step
-            control_cells = []
+
+            control_cells = _board_control_cells()
             constraints = []
 
             DIRS.each do |dir|
-                control_cells[dir] = board.cell(control_cell(dir))
                 constraints[dir] = control_cells[dir].constraint(dir)
             end
 
