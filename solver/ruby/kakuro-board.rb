@@ -184,11 +184,13 @@ module Kakuro
             return Coords_Loop.new(Position.new(:x => @width-1, :y=>@height-1))
         end
 
+        def solid_coords
+            return all_coords.select { |pos| cell(pos).solid? }
+        end
+
         def prepare()
-            all_coords.each do |pos|
-                if cell(pos).solid?
-                    _calc_cell_constraints(pos)
-                end
+            solid_coords.each do |pos|
+                _calc_cell_constraints(pos)
             end
         end
 
