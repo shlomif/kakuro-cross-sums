@@ -353,7 +353,7 @@ module Kakuro
         def calc_dir_constraints
             @total_masks = []
             @remaining_constraints = []
-            DIRS.each { |dir|
+            DIRS.each do |dir|
                 other_dir = 1 - dir
                 t_mask = @total_masks[other_dir] = 
                     combine_masks(@constraints[other_dir])
@@ -363,7 +363,7 @@ module Kakuro
                         (((constraint & t_mask) != 0) &&
                          (constraint & @initial_cell_values != 0))
                     end
-            }
+            end
 
             @possible_cell_values = (
                 (@initial_cell_values & @total_masks[Vert]) & 
