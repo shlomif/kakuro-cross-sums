@@ -25,6 +25,14 @@ module Kakuro
         end
     end
 
+    class Position
+        attr_reader :x, :y
+        def initialize(options={})
+            @x = options[:x] or raise "x not given"
+            @y = options[:y] or raise "y not given"
+        end
+    end
+
     class Cell
 
         attr_reader :id, :verdict
@@ -142,17 +150,17 @@ module Kakuro
             @matrix.push(row)
         end
 
-        def cell_yx(row,col)
+        def cell_yx(pos)
             # Uncomment for debugging:
             # puts "Row = #{row} ; Col = #{col}"
-            return @cells[@matrix[row][col]];
+            return @cells[@matrix[pos.y][pos.x]];
         end
 
         def prepare()
             (0 .. (@height-1)).each do |y|
                 (0 .. (@width-1)).each do |x|
                     
-                    if cell_yx(y,x).solid?
+                    if cell_yx(Position.new(:x => x, :y => y)).solid?
                         _calc_cell_constraints(y,x)
                     end
                 end
@@ -166,7 +174,7 @@ module Kakuro
                         return false
                     else
                         y += 1
-                        return [y,x]
+                        return Position.new(:x => x, :y => y)
                     end
                 }
             else
@@ -175,14 +183,14 @@ module Kakuro
                         return false
                     else
                         x += 1
-                        return [y,x]
+                        return Position.new(:x => x, :y => y)
                     end
                 }
             end
         end
 
         def _calc_cell_constraints(y,x)
-            solid_cell = cell_yx(y,x)
+            solid_cell = cell_yx(Position.new(:x => x, :y => y))
 
             for dir in [Down, Right]
                 user_sum = solid_cell.user_sum(dir)
@@ -191,9 +199,9 @@ module Kakuro
                     count = 0
                     iter = get_dir_iter(y,x,dir)
                     pos = iter.call()
-                    while (pos && (! cell_yx(*pos).solid?))
+                    while (pos && (! cell_yx(pos).solid?))
                         count += 1
-                        cell_yx(*pos).set_control(dir, y, x)
+                        cell_yx(pos).set_control(dir, y, x)
                         pos = iter.call()
                     end
                     iter = nil
