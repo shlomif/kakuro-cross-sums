@@ -26,7 +26,7 @@ $BOARD.all_coords.each do |pos|
     format = '[%-15s]'
     c = $BOARD.cell(pos)
     if c.solid?
-        print sprintf(format, '')
+        print sprintf(format, ' \\\\ ')
     else
         print sprintf(format, c.get_possible_verdicts.join(','))
     end

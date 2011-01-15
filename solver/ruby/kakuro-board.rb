@@ -311,6 +311,12 @@ module Kakuro
             solid_coords.each do |pos|
                 _calc_cell_constraints(pos)
             end
+            all_coords.each do |pos|
+                mycell = cell(pos)
+                if (!mycell.solid? and mycell.is_known?)
+                    mycell._set_conslusive_verdict(mycell.verdict)
+                end
+            end
         end
 
         def get_dir_iter(pos,dir)
