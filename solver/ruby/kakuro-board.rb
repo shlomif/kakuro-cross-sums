@@ -154,15 +154,13 @@ module Kakuro
 
         def _merge_constraints_step
 
-            control_cells = _board_control_cells()
-
             merger = CellConstraintsMerger.new(
                 :constraints => _get_board_cells_constraints,
                 :cell_values => verdicts_mask
             )
 
             DIRS.each do |dir|
-                control_cells[dir].set_new_constraint(
+                _board_control_cells[dir].set_new_constraint(
                     dir, 
                     merger.remaining_dir_constraints(dir)
                 )
