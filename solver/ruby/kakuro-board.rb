@@ -7,6 +7,8 @@ module Kakuro
     Down = Vert = 0
     Right = Horiz = 1
 
+    DIRS = [Vert, Horiz,]
+
     class ParsingError < RuntimeError
         def initialize()
         end
@@ -292,7 +294,7 @@ module Kakuro
                         control_cells = []
                         constraints = []
 
-                        [Vert, Horiz].each do |dir|
+                        DIRS.each do |dir|
                             control_cells[dir] = cell(mycell.control_cell(dir))
                             constraints[dir] = control_cells[dir].constraint(dir)
                         end
@@ -302,7 +304,7 @@ module Kakuro
                             :cell_values => mycell.verdicts_mask
                         )
 
-                        [Vert, Horiz].each do |dir|
+                        DIRS.each do |dir|
                             control_cells[dir].set_new_constraint(
                                 dir, 
                                 merger.remaining_dir_constraints(dir)
@@ -336,7 +338,7 @@ module Kakuro
         def calc_dir_constraints
             @total_masks = []
             @remaining_constraints = []
-            [Vert, Horiz].each { |dir|
+            DIRS.each { |dir|
                 other_dir = 1 - dir
                 t_mask = @total_masks[other_dir] = 
                     combine_masks(@constraints[other_dir])
