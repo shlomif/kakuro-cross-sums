@@ -70,8 +70,8 @@ module Kakuro
             return @user_sums[direction]
         end
 
-        def set_control(direction, y, x)
-            @control_cells[direction] = [y,x]
+        def set_control(direction, pos)
+            @control_cells[direction] = pos
         end
 
         def control_cell(dir)
@@ -202,7 +202,7 @@ module Kakuro
                     pos = iter.call()
                     while (pos && (! cell_yx(pos).solid?))
                         count += 1
-                        cell_yx(pos).set_control(dir, init_pos.y, init_pos.x)
+                        cell_yx(pos).set_control(dir, init_pos)
                         pos = iter.call()
                     end
                     iter = nil

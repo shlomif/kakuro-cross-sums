@@ -134,9 +134,12 @@ EOF
         @board.cell_yx(Position.new(:x => 1, :y => 1)).constraint(Kakuro::Right).num_cells.should == 2
         @board.cell_yx(Position.new(:x => 1, :y => 1)).constraint(Kakuro::Right).sum.should == 15
 
-        @board.cell_yx(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Horiz).should == [1,1]
-        @board.cell_yx(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Vert).should == [0,2]
-        @board.cell_yx(Position.new(:x => 1, :y => 3)).control_cell(Kakuro::Vert).should == [1,1]
+        @board.cell_yx(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Horiz).x.should == 1
+        @board.cell_yx(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Horiz).y.should == 1
+        @board.cell_yx(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Vert).x.should == 2
+        @board.cell_yx(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Vert).y.should == 0
+        @board.cell_yx(Position.new(:x => 1, :y => 3)).control_cell(Kakuro::Vert).x.should == 1
+        @board.cell_yx(Position.new(:x => 1, :y => 3)).control_cell(Kakuro::Vert).y.should == 1
 
         # Testing for out-of-board constraints.
         @board.cell_yx(Position.new(:x => 4, :y => 4)).constraint(Kakuro::Right).num_cells.should == 4
