@@ -47,41 +47,41 @@ EOF
     end
 
     it "cells are solid or not" do
-        @board.cell_yx(Position.new(:x => 0, :y => 0)).solid?.ok
-        @board.cell_yx(Position.new(:x => 1, :y => 0)).solid?.ok
-        @board.cell_yx(Position.new(:x => 2, :y => 0)).solid?.ok
-        @board.cell_yx(Position.new(:x => 2, :y => 1)).solid?.not_ok
-        @board.cell_yx(Position.new(:x => 3, :y => 1)).solid?.not_ok
-        @board.cell_yx(Position.new(:x => 4, :y => 1)).solid?.ok
-        @board.cell_yx(Position.new(:x => 5, :y => 1)).solid?.not_ok
-        @board.cell_yx(Position.new(:x => 5, :y => 1)).solid?.not_ok
-        @board.cell_yx(Position.new(:x => 6, :y => 1)).solid?.not_ok
-        @board.cell_yx(Position.new(:x => 6, :y => 1)).solid?.not_ok
-        @board.cell_yx(Position.new(:x => 7, :y => 1)).solid?.ok
-        @board.cell_yx(Position.new(:x => 8, :y => 1)).solid?.ok
-        @board.cell_yx(Position.new(:x => 0, :y => 8)).solid?.ok
-        @board.cell_yx(Position.new(:x => 1, :y => 8)).solid?.ok
-        @board.cell_yx(Position.new(:x => 2, :y => 8)).solid?.ok
-        @board.cell_yx(Position.new(:x => 3, :y => 8)).solid?.not_ok
-        @board.cell_yx(Position.new(:x => 4, :y => 8)).solid?.not_ok
-        @board.cell_yx(Position.new(:x => 5, :y => 8)).solid?.ok
-        @board.cell_yx(Position.new(:x => 6, :y => 8)).solid?.ok
-        @board.cell_yx(Position.new(:x => 7, :y => 8)).solid?.ok
-        @board.cell_yx(Position.new(:x => 8, :y => 8)).solid?.ok
+        @board.cell(Position.new(:x => 0, :y => 0)).solid?.ok
+        @board.cell(Position.new(:x => 1, :y => 0)).solid?.ok
+        @board.cell(Position.new(:x => 2, :y => 0)).solid?.ok
+        @board.cell(Position.new(:x => 2, :y => 1)).solid?.not_ok
+        @board.cell(Position.new(:x => 3, :y => 1)).solid?.not_ok
+        @board.cell(Position.new(:x => 4, :y => 1)).solid?.ok
+        @board.cell(Position.new(:x => 5, :y => 1)).solid?.not_ok
+        @board.cell(Position.new(:x => 5, :y => 1)).solid?.not_ok
+        @board.cell(Position.new(:x => 6, :y => 1)).solid?.not_ok
+        @board.cell(Position.new(:x => 6, :y => 1)).solid?.not_ok
+        @board.cell(Position.new(:x => 7, :y => 1)).solid?.ok
+        @board.cell(Position.new(:x => 8, :y => 1)).solid?.ok
+        @board.cell(Position.new(:x => 0, :y => 8)).solid?.ok
+        @board.cell(Position.new(:x => 1, :y => 8)).solid?.ok
+        @board.cell(Position.new(:x => 2, :y => 8)).solid?.ok
+        @board.cell(Position.new(:x => 3, :y => 8)).solid?.not_ok
+        @board.cell(Position.new(:x => 4, :y => 8)).solid?.not_ok
+        @board.cell(Position.new(:x => 5, :y => 8)).solid?.ok
+        @board.cell(Position.new(:x => 6, :y => 8)).solid?.ok
+        @board.cell(Position.new(:x => 7, :y => 8)).solid?.ok
+        @board.cell(Position.new(:x => 8, :y => 8)).solid?.ok
     end
 
     it "should contain the correct sums" do
-        @board.cell_yx(Position.new(:x => 2, :y => 0)).user_sum(Kakuro::Down).should == 29
-        @board.cell_yx(Position.new(:x => 3, :y => 0)).user_sum(Kakuro::Down).should == 34
-        @board.cell_yx(Position.new(:x => 7, :y => 2)).user_sum(Kakuro::Down).should == 3
-        @board.cell_yx(Position.new(:x => 1, :y => 1)).user_sum(Kakuro::Down).should == 10
-        @board.cell_yx(Position.new(:x => 1, :y => 1)).user_sum(Kakuro::Right).should == 17
-        @board.cell_yx(Position.new(:x => 0, :y => 2)).user_sum(Kakuro::Right).should == 30
-        @board.cell_yx(Position.new(:x => 2, :y => 0)).user_sum(Kakuro::Right).should be_nil
-        @board.cell_yx(Position.new(:x => 0, :y => 0)).user_sum(Kakuro::Right).should be_nil
-        @board.cell_yx(Position.new(:x => 0, :y => 0)).user_sum(Kakuro::Down).should be_nil
-        @board.cell_yx(Position.new(:x => 0, :y => 2)).user_sum(Kakuro::Down).should be_nil
-        @board.cell_yx(Position.new(:x => 2, :y => 2)).verdict.should == 5
+        @board.cell(Position.new(:x => 2, :y => 0)).user_sum(Kakuro::Down).should == 29
+        @board.cell(Position.new(:x => 3, :y => 0)).user_sum(Kakuro::Down).should == 34
+        @board.cell(Position.new(:x => 7, :y => 2)).user_sum(Kakuro::Down).should == 3
+        @board.cell(Position.new(:x => 1, :y => 1)).user_sum(Kakuro::Down).should == 10
+        @board.cell(Position.new(:x => 1, :y => 1)).user_sum(Kakuro::Right).should == 17
+        @board.cell(Position.new(:x => 0, :y => 2)).user_sum(Kakuro::Right).should == 30
+        @board.cell(Position.new(:x => 2, :y => 0)).user_sum(Kakuro::Right).should be_nil
+        @board.cell(Position.new(:x => 0, :y => 0)).user_sum(Kakuro::Right).should be_nil
+        @board.cell(Position.new(:x => 0, :y => 0)).user_sum(Kakuro::Down).should be_nil
+        @board.cell(Position.new(:x => 0, :y => 2)).user_sum(Kakuro::Down).should be_nil
+        @board.cell(Position.new(:x => 2, :y => 2)).verdict.should == 5
     end
 end
 
@@ -128,24 +128,24 @@ EOF
 
     it "should give the right constraints" do
 
-        @board.cell_yx(Position.new(:x => 1, :y => 1)).constraint(Kakuro::Down).num_cells.should == 2
-        @board.cell_yx(Position.new(:x => 1, :y => 1)).constraint(Kakuro::Down).sum.should == 8
+        @board.cell(Position.new(:x => 1, :y => 1)).constraint(Kakuro::Down).num_cells.should == 2
+        @board.cell(Position.new(:x => 1, :y => 1)).constraint(Kakuro::Down).sum.should == 8
 
-        @board.cell_yx(Position.new(:x => 1, :y => 1)).constraint(Kakuro::Right).num_cells.should == 2
-        @board.cell_yx(Position.new(:x => 1, :y => 1)).constraint(Kakuro::Right).sum.should == 15
+        @board.cell(Position.new(:x => 1, :y => 1)).constraint(Kakuro::Right).num_cells.should == 2
+        @board.cell(Position.new(:x => 1, :y => 1)).constraint(Kakuro::Right).sum.should == 15
 
-        @board.cell_yx(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Horiz).x.should == 1
-        @board.cell_yx(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Horiz).y.should == 1
-        @board.cell_yx(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Vert).x.should == 2
-        @board.cell_yx(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Vert).y.should == 0
-        @board.cell_yx(Position.new(:x => 1, :y => 3)).control_cell(Kakuro::Vert).x.should == 1
-        @board.cell_yx(Position.new(:x => 1, :y => 3)).control_cell(Kakuro::Vert).y.should == 1
+        @board.cell(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Horiz).x.should == 1
+        @board.cell(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Horiz).y.should == 1
+        @board.cell(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Vert).x.should == 2
+        @board.cell(Position.new(:x => 2, :y => 1)).control_cell(Kakuro::Vert).y.should == 0
+        @board.cell(Position.new(:x => 1, :y => 3)).control_cell(Kakuro::Vert).x.should == 1
+        @board.cell(Position.new(:x => 1, :y => 3)).control_cell(Kakuro::Vert).y.should == 1
 
         # Testing for out-of-board constraints.
-        @board.cell_yx(Position.new(:x => 4, :y => 4)).constraint(Kakuro::Right).num_cells.should == 4
-        @board.cell_yx(Position.new(:x => 4, :y => 4)).constraint(Kakuro::Right).sum.should == 6
+        @board.cell(Position.new(:x => 4, :y => 4)).constraint(Kakuro::Right).num_cells.should == 4
+        @board.cell(Position.new(:x => 4, :y => 4)).constraint(Kakuro::Right).sum.should == 6
 
-        @board.cell_yx(Position.new(:x => 3, :y => 6)).constraint(Kakuro::Down).num_cells.should == 2
-        @board.cell_yx(Position.new(:x => 3, :y => 6)).constraint(Kakuro::Down).sum.should == 1
+        @board.cell(Position.new(:x => 3, :y => 6)).constraint(Kakuro::Down).num_cells.should == 2
+        @board.cell(Position.new(:x => 3, :y => 6)).constraint(Kakuro::Down).sum.should == 1
     end
 end

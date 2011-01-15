@@ -158,7 +158,7 @@ module Kakuro
             @matrix.push(row)
         end
 
-        def cell_yx(pos)
+        def cell(pos)
             # Uncomment for debugging:
             # puts "Row = #{row} ; Col = #{col}"
             return @cells[@matrix[pos.y][pos.x]];
@@ -169,7 +169,7 @@ module Kakuro
                 (0 .. (@width-1)).each do |x|
 
                     pos = Position.new(:x => x, :y => y)
-                    if cell_yx(pos).solid?
+                    if cell(pos).solid?
                         _calc_cell_constraints(pos)
                     end
                 end
@@ -199,7 +199,7 @@ module Kakuro
         end
 
         def _calc_cell_constraints(init_pos)
-            solid_cell = cell_yx(init_pos)
+            solid_cell = cell(init_pos)
 
             for dir in [Down, Right]
                 user_sum = solid_cell.user_sum(dir)
@@ -208,9 +208,9 @@ module Kakuro
                     count = 0
                     iter = get_dir_iter(init_pos, dir)
                     pos = iter.call()
-                    while (pos && (! cell_yx(pos).solid?))
+                    while (pos && (! cell(pos).solid?))
                         count += 1
-                        cell_yx(pos).set_control(dir, init_pos)
+                        cell(pos).set_control(dir, init_pos)
                         pos = iter.call()
                     end
                     iter = nil
