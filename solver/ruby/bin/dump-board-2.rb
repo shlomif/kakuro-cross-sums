@@ -1,18 +1,9 @@
 require "kakuro-board.rb"
 
-class Object
-    def ok()
-        self.should == true
-    end
-    def not_ok()
-        self.should == false
-    end
-end
-
-describe "Parse 1" do
-    before do
-        @board = Kakuro::Board.new
-        @board.parse(<<'EOF')
+puts "Before new"
+$BOARD = Kakuro::Board.new
+puts "After new"
+$BOARD.parse(<<'EOF')
 [\]    [\]      [29\]  [34\]   [\]      [21\]  [8\]     [\]    [\]
 [\]    [10\17]  []     []      [3\3]    []     []       [\]    [\]
 [\30]  []       [5]    []      []       [2]    []       [3\]   [11\]
@@ -23,13 +14,23 @@ describe "Parse 1" do
 [\]    [\]      [\6]   []      []       [\11]  []       []     [\]
 [\]    [\]      [\3]   []      []       [\]    [\]      [\]    [\]
 EOF
-    end
-
-    it "should merge constraints correctly" do
-        @board.prepare()
-        @board.merge_constraints()
-        @board.filter_constraints_without_cells()
-    end
-
+puts "After parse"
+$BOARD.prepare()
+puts "After prepare"
+while $BOARD.merge_constraints() or $BOARD.filter_constraints_without_cells()
+    true
 end
-
+puts "After merge_constraints"
+$BOARD.all_coords.each do |pos|
+    if (pos.x == 0)
+        print "\n"
+    end
+    format = '[%-10s]'
+    c = $BOARD.cell(pos)
+    if c.solid?
+        print sprintf(format, ' \\\\ ')
+    else
+        print sprintf(format, c.get_possible_verdicts.join(','))
+    end
+end
+print "\n"

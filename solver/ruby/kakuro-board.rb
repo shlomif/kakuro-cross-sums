@@ -360,6 +360,7 @@ module Kakuro
         def _calc_cell_constraints(init_pos)
             solid_cell = cell(init_pos)
 
+            # TODO : convert to DIRS.each
             for dir in [Down, Right]
                 user_sum = solid_cell.user_sum(dir)
 
@@ -397,7 +398,38 @@ module Kakuro
             end
 
             return
+        end
 
+        def filter_constraints_without_cells
+            dirty = false
+            solid_coords.each do |init_pos|
+                mycell = cell(init_pos)
+                DIRS.each do |dir|
+                    constraint = mycell.constraint(dir)
+
+                    if (constraint)
+                        total_mask = 0
+
+                        iter = get_dir_iter(init_pos, dir)
+                        pos = iter.call()
+
+                        while (pos && (cell(pos).fillable?))
+                            total_mask |= cell(pos).verdicts_mask
+
+                            pos = iter.call()
+                        end
+
+                        ret = mycell.set_new_constraint(
+                            dir,
+                            constraint.select { |c| (c & total_mask) == c }
+                        )
+
+                        dirty ||= ret
+                    end
+                end
+            end
+
+            return dirty
         end
     end
 
