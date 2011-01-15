@@ -159,9 +159,10 @@ module Kakuro
         def prepare()
             (0 .. (@height-1)).each do |y|
                 (0 .. (@width-1)).each do |x|
-                    
-                    if cell_yx(Position.new(:x => x, :y => y)).solid?
-                        _calc_cell_constraints(y,x)
+
+                    pos = Position.new(:x => x, :y => y)
+                    if cell_yx(pos).solid?
+                        _calc_cell_constraints(pos)
                     end
                 end
             end
@@ -189,19 +190,19 @@ module Kakuro
             end
         end
 
-        def _calc_cell_constraints(y,x)
-            solid_cell = cell_yx(Position.new(:x => x, :y => y))
+        def _calc_cell_constraints(init_pos)
+            solid_cell = cell_yx(init_pos)
 
             for dir in [Down, Right]
                 user_sum = solid_cell.user_sum(dir)
 
                 if user_sum
                     count = 0
-                    iter = get_dir_iter(y,x,dir)
+                    iter = get_dir_iter(init_pos.y,init_pos.x,dir)
                     pos = iter.call()
                     while (pos && (! cell_yx(pos).solid?))
                         count += 1
-                        cell_yx(pos).set_control(dir, y, x)
+                        cell_yx(pos).set_control(dir, init_pos.y, init_pos.x)
                         pos = iter.call()
                     end
                     iter = nil
