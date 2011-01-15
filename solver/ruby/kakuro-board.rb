@@ -308,11 +308,17 @@ module Kakuro
             return Coords_Loop.new(Position.new(:x => @width-1, :y=>@height-1))
         end
 
+        [:solid, :to_be_filled, :filled].each do |meth| 
+            define_method "#{meth}_coords" do
+                all_coords.select { |pos| cell(pos).send("#{meth}?") }
+            end
+        end
+
         def solid_coords
             return all_coords.select { |pos| cell(pos).solid? }
         end
 
-        def coords_to_fill
+        def to_be_filled_coords
             return all_coords.select { |pos| cell(pos).to_be_filled? }
         end
 
@@ -378,7 +384,7 @@ module Kakuro
         end
 
         def _merge_constraints_scan
-            return coords_to_fill.inject(false) do |dirty, pos|
+            return to_be_filled_coords.inject(false) do |dirty, pos|
                 ret = _merge_constraint_cell_step(pos)
                 dirty || ret
             end
