@@ -164,14 +164,30 @@ module Kakuro
             return @cells[@matrix[pos.y][pos.x]];
         end
 
-        def prepare()
-            (0 .. (@height-1)).each do |y|
-                (0 .. (@width-1)).each do |x|
+        class Coords_Loop
+            include Enumerable
 
-                    pos = Position.new(:x => x, :y => y)
-                    if cell(pos).solid?
-                        _calc_cell_constraints(pos)
+            def initialize(max_pos)
+                @max_pos = max_pos
+            end
+
+            def each
+                ( 0 .. @max_pos.y).each do |y|
+                    (0 .. @max_pos.x).each do |x|
+                        yield Position.new(:x => x, :y => y)
                     end
+                end
+            end
+        end
+
+        def all_coords
+            return Coords_Loop.new(Position.new(:x => @width-1, :y=>@height-1))
+        end
+
+        def prepare()
+            all_coords.each do |pos|
+                if cell(pos).solid?
+                    _calc_cell_constraints(pos)
                 end
             end
         end
