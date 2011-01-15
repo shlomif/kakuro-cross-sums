@@ -317,15 +317,16 @@ module Kakuro
             return all_coords.select { |pos| cell(pos).to_be_filled? }
         end
 
+        def filled_coords
+            return all_coords.select { |pos| cell(pos).filled? }
+        end
+
         def prepare()
             solid_coords.each do |pos|
                 _calc_cell_constraints(pos)
             end
-            all_coords.each do |pos|
-                mycell = cell(pos)
-                if mycell.filled?
-                    mycell._set_conslusive_verdict(mycell.verdict)
-                end
+            filled_coords.each do |pos|
+                cell(pos)._set_conslusive_verdict(cell(pos).verdict)
             end
         end
 
