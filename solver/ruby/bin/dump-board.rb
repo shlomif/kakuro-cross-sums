@@ -23,7 +23,7 @@ $BOARD.all_coords.each do |pos|
     if (pos.x == 0)
         print "\n"
     end
-    format = '[%-15s]'
+    format = '[%-10s]'
     c = $BOARD.cell(pos)
     if c.solid?
         print sprintf(format, ' \\\\ ')
