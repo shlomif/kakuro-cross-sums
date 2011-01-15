@@ -15,7 +15,8 @@ describe "Merge Two Constraints" do
         horiz = Kakuro::Constraint.new(1,2).as_list
 
         merger = Kakuro::CellConstraintsMerger.new(
-            :constraints => [vert,horiz,]
+            :constraints => [vert,horiz,],
+            :cell_values => (0..8).inject(0) { |total,x| (total | (1 << x))}
         )
         
         merger.remaining_dir_constraints(Kakuro::Vert).should == \
@@ -39,7 +40,8 @@ describe "[[1,2]] and [[1,8],[2,7],[3,6],[4,5]]" do
         ).as_list
 
         merger = Kakuro::CellConstraintsMerger.new(
-            :constraints => [vert,horiz,]
+            :constraints => [vert,horiz,],
+            :cell_values => ((0..8).inject(0) { |total,x| (total | (1 << x))})
         )
         
         merger.remaining_dir_constraints(Kakuro::Vert).should == \
@@ -50,6 +52,31 @@ describe "[[1,2]] and [[1,8],[2,7],[3,6],[4,5]]" do
         merger.possible_cell_values.should == ((1 << 0)|(1 << 1))
 
         merger.has_single_verdict.should == false
+    end
+end
+
+describe "[[1,2]] and [[1,8],[2,7],[3,6],[4,5]] with 1 alone" do
+    it "should be merged" do
+        vert = Kakuro::Constraint.new(
+            *Kakuro::Perms.new.human_to_internal(3,2)
+        ).as_list
+        horiz = Kakuro::Constraint.new(
+            *Kakuro::Perms.new.human_to_internal(9,2)
+        ).as_list
+
+        merger = Kakuro::CellConstraintsMerger.new(
+            :constraints => [vert,horiz,],
+            :cell_values => ((0..0).inject(0) { |total,x| (total | (1 << x))})
+        )
+        
+        merger.remaining_dir_constraints(Kakuro::Vert).should == \
+            [(1 << 0)|(1 << 1)]
+        merger.remaining_dir_constraints(Kakuro::Horiz).should == \
+            [ ((1 << 0)|(1 << 7)), ]
+
+        merger.possible_cell_values.should == (1 << 0)
+
+        merger.has_single_verdict.should == 0
     end
 end
 

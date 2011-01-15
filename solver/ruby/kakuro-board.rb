@@ -43,7 +43,7 @@ module Kakuro
 
     class Cell
 
-        attr_reader :id, :verdict
+        attr_reader :id, :verdict, :verdicts_mask
 
         def initialize(id, content)
             @id = id
@@ -118,7 +118,7 @@ module Kakuro
         end
 
         def get_possible_verdicts
-            return [0 .. 8].select { |x| (@verdicts_mask & (1 << x)) != 0 }
+            return (0 .. 8).select { |x| (@verdicts_mask & (1 << x)) != 0 }
         end
 
         def set_possible_verdicts(verdicts)
@@ -298,7 +298,8 @@ module Kakuro
                         end
 
                         merger = CellConstraintsMerger.new(
-                            :constraints => constraints
+                            :constraints => constraints,
+                            :cell_values => mycell.verdicts_mask
                         )
 
                         [Vert, Horiz].each do |dir|
@@ -324,6 +325,7 @@ module Kakuro
     class CellConstraintsMerger
         def initialize(args)
             @constraints = args[:constraints]
+            @initial_cell_values = args[:cell_values]
             calc_dir_constraints()
         end
 
@@ -339,12 +341,17 @@ module Kakuro
                 t_mask = @total_masks[other_dir] = 
                     combine_masks(@constraints[other_dir])
                 @remaining_constraints[dir] = \
-                    @constraints[dir].select { 
-                        |constraint| ((constraint & t_mask) != 0)
-                    }
+                    @constraints[dir].select do 
+                        |constraint| 
+                        (((constraint & t_mask) != 0) &&
+                         (constraint & @initial_cell_values != 0))
+                    end
             }
 
-            @possible_cell_values = @total_masks[Vert] & @total_masks[Horiz]
+            @possible_cell_values = (
+                (@initial_cell_values & @total_masks[Vert]) & 
+                    @total_masks[Horiz]
+            )
         end
 
         def remaining_dir_constraints(dir)
