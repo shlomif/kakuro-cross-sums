@@ -31,4 +31,4 @@ $BOARD.all_coords.each do |pos|
         print sprintf(format, c.get_possible_verdicts.join(','))
     end
 end
-STDERR.puts($BOARD)
+print "\n"
