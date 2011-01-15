@@ -287,41 +287,49 @@ module Kakuro
             end
         end
 
-        def merge_constraints
-            dirty = true
-            while dirty
-                dirty = false
-                coords_to_fill.each do |pos|
-                    mycell = cell(pos)
-                    control_cells = []
-                    constraints = []
+        def _merge_constraints_scan
+            dirty = false
+            coords_to_fill.each do |pos|
+                mycell = cell(pos)
+                control_cells = []
+                constraints = []
 
-                    DIRS.each do |dir|
-                        control_cells[dir] = cell(mycell.control_cell(dir))
-                        constraints[dir] = control_cells[dir].constraint(dir)
-                    end
-
-                    merger = CellConstraintsMerger.new(
-                        :constraints => constraints,
-                        :cell_values => mycell.verdicts_mask
-                    )
-
-                    DIRS.each do |dir|
-                        control_cells[dir].set_new_constraint(
-                            dir, 
-                            merger.remaining_dir_constraints(dir)
-                        )
-                    end
-
-                    mycell.set_possible_verdicts(
-                        merger.possible_cell_values
-                    )
-
-                    if (mycell.flush_dirty)
-                        dirty = true
-                    end
+                DIRS.each do |dir|
+                    control_cells[dir] = cell(mycell.control_cell(dir))
+                    constraints[dir] = control_cells[dir].constraint(dir)
                 end
+
+                merger = CellConstraintsMerger.new(
+                    :constraints => constraints,
+                    :cell_values => mycell.verdicts_mask
+                )
+
+                DIRS.each do |dir|
+                    control_cells[dir].set_new_constraint(
+                        dir, 
+                        merger.remaining_dir_constraints(dir)
+                    )
+                end
+
+                mycell.set_possible_verdicts(
+                    merger.possible_cell_values
+                )
+
+
+                dirty ||= mycell.flush_dirty
             end
+
+            return dirty
+        end
+
+        def merge_constraints
+
+            while _merge_constraints_scan()
+                true
+            end
+
+            return
+
         end
     end
 
