@@ -340,10 +340,14 @@ module Kakuro
     end
 
     class CellConstraintsMerger
+
         def initialize(args)
+
             @constraints = args[:constraints]
             @initial_cell_values = args[:cell_values]
+
             calc_dir_constraints()
+
         end
 
         def combine_masks(masks_a)
@@ -351,15 +355,18 @@ module Kakuro
         end
 
         def calc_dir_constraints
+
             @total_masks = []
             @remaining_constraints = []
+
             DIRS.each do |dir|
                 other_dir = 1 - dir
+
                 t_mask = @total_masks[other_dir] = 
                     combine_masks(@constraints[other_dir])
+
                 @remaining_constraints[dir] = \
-                    @constraints[dir].select do 
-                        |constraint| 
+                    @constraints[dir].select do |constraint| 
                         (((constraint & t_mask) != 0) &&
                          (constraint & @initial_cell_values != 0))
                     end
