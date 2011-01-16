@@ -474,6 +474,7 @@ module Kakuro
                 end
             end
         end
+
         def dir_cells_enum(init_pos, dir)
             return Dirs_Cell_Iter.new(self, init_pos, dir)
         end
