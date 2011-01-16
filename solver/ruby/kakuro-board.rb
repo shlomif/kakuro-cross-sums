@@ -178,15 +178,19 @@ module Kakuro
 
         private
 
+        def init_solid(vert, horiz)
+            @is_solid = true
+            if vert.length > 0
+                @user_sums[Kakuro::Down] = vert.to_i();
+            end
+            if horiz.length > 0
+                @user_sums[Kakuro::Right] = horiz.to_i();
+            end
+        end
+
         def process_text(content)
             if (content =~ /^\s*(\d*)\s*\\\s*(\d*)\s*$/)
-                @is_solid = true
-                if $1.length > 0
-                    @user_sums[Kakuro::Down] = $1.to_i();
-                end
-                if $2.length > 0
-                    @user_sums[Kakuro::Right] = $2.to_i();
-                end
+                return init_solid($1,$2)
             elsif (content =~ /^\s*(\d*)\s*$/)
                 digit = $1
                 @is_solid = false
