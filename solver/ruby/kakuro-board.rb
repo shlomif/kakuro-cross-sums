@@ -131,6 +131,7 @@ module Kakuro
 
         def set_control(direction, pos)
             @control_cells[direction] = pos
+            return true
         end
 
         def control_cell(dir)
@@ -413,12 +414,9 @@ module Kakuro
                 user_sum = solid_cell.user_sum(dir)
 
                 if user_sum
-                    count = 0
-
-                    _get_dir_cells_enum(init_pos, dir).each do |mycell|
-                        count += 1
-                        mycell.set_control(dir, init_pos)
-                    end
+                    count = _get_dir_cells_enum(init_pos, dir).count { 
+                        |c| c.set_control(dir, init_pos)
+                    }
 
                     solid_cell.set_num_cells(dir, count)
                 end
