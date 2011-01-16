@@ -381,6 +381,26 @@ module Kakuro
 
         private
 
+        class Dirs_Cell_Iter
+            include Enumerable
+
+            def initialize(board, init_pos, dir)
+                @board = board
+                @pos = init_pos
+                @dirs_iter = Dirs_Iter.new(@pos, *@board.dir_iter_params(dir))
+            end
+
+            def each
+                @dirs_iter.each do |pos|
+                    mycell = @board.cell(pos)
+                    if mycell.fillable?
+                        yield mycell
+                    else
+                        break
+                    end
+                end
+            end
+        end
         def dir_cells_enum(init_pos, dir)
             return Dirs_Cell_Iter.new(self, init_pos, dir)
         end
@@ -408,6 +428,30 @@ module Kakuro
         def merge_constraints_scan
             return to_be_filled_coords.kakuro_collect_dirty do |pos| 
                 merge_constraint_cell_step(pos)
+            end
+        end
+
+        def filter_constraints_cell_constraint_step(init_pos, dir)
+            init_cell = cell(init_pos)
+            constraint = init_cell.constraint(dir)
+
+            if (constraint)
+                total_mask = dir_cells_enum(init_pos, dir).inject(0) { 
+                    |t, c| t | c.verdicts_mask
+                }
+
+                return init_cell.set_new_constraint(
+                    dir,
+                    constraint.select { |c| (c & total_mask) == c }
+                )
+            else
+                return false
+            end
+        end
+
+        def filter_constraints_cell_step(init_pos)
+            return DIRS.kakuro_collect_dirty do |dir|
+                filter_constraints_cell_constraint_step(init_pos, dir)
             end
         end
 
@@ -446,28 +490,6 @@ module Kakuro
             end
         end
 
-        class Dirs_Cell_Iter
-            include Enumerable
-
-            def initialize(board, init_pos, dir)
-                @board = board
-                @pos = init_pos
-                @dirs_iter = Dirs_Iter.new(@pos, *@board.dir_iter_params(dir))
-            end
-
-            def each
-                @dirs_iter.each do |pos|
-                    mycell = @board.cell(pos)
-                    if mycell.fillable?
-                        yield mycell
-                    else
-                        break
-                    end
-                end
-            end
-        end
-
-
 
         def merge_constraints
 
@@ -478,33 +500,9 @@ module Kakuro
             return
         end
 
-        def _filter_constraints_cell_constraint_step(init_pos, dir)
-            init_cell = cell(init_pos)
-            constraint = init_cell.constraint(dir)
-
-            if (constraint)
-                total_mask = dir_cells_enum(init_pos, dir).inject(0) { 
-                    |t, c| t | c.verdicts_mask
-                }
-
-                return init_cell.set_new_constraint(
-                    dir,
-                    constraint.select { |c| (c & total_mask) == c }
-                )
-            else
-                return false
-            end
-        end
-
-        def _filter_constraints_cell_step(init_pos)
-            return DIRS.kakuro_collect_dirty do |dir|
-                _filter_constraints_cell_constraint_step(init_pos, dir)
-            end
-        end
-
         def filter_constraints_without_cells
             return solid_coords.kakuro_collect_dirty do |pos|
-                _filter_constraints_cell_step(pos)
+                filter_constraints_cell_step(pos)
             end
         end
     end
