@@ -46,6 +46,36 @@ module Kakuro
         end
     end
 
+    class Verdicts
+        MAX_DIGIT = 9
+
+        Verdicts_Map = (1 .. MAX_DIGIT).map { |x| x-1 }.inject({}) { 
+            |h, n| h[1 << n] = n ; h
+        }
+
+        def initialize
+            return
+        end
+
+        def contains(bitmask)
+            if Verdicts_Map.has_key?(bitmask)
+                @val = Verdicts_Map[bitmask]
+                return true
+            else
+                @val = nil
+                return false
+            end
+        end
+
+        def lookup
+            return @val
+        end
+
+        def total_lookup(bitmask)
+            return contains(bitmask) ? lookup() : false
+        end
+    end
+
     class Constraint
         attr_reader :num_cells, :sum
 
@@ -196,14 +226,11 @@ module Kakuro
             end
         end
 
-        Verdicts_Map = (1 .. 9).map { |x| x-1 }.inject({}) { 
-            |h, n| h[1 << n] = n ; h
-        }
-
         def _set_possible_verdicts_with_propagation(verdicts)
             if set_possible_verdicts(verdicts)
-                if (Verdicts_Map.has_key?(@verdicts_mask))
-                    @verdict = Verdicts_Map[@verdicts_mask]
+                v = Verdicts.new
+                if (v.contains(@verdicts_mask))
+                    @verdict = v.lookup
                     _propagate_conclusive_verdict
                 end
             end
@@ -519,16 +546,8 @@ module Kakuro
             return @possible_cell_values
         end
 
-        Verdicts_Map = (1 .. 9).map { |x| x-1 }.inject({}) { 
-            |h, n| h[1 << n] = n ; h
-        }
-
         def has_single_verdict
-            if Verdicts_Map.has_key?(@possible_cell_values)
-                return Verdicts_Map[@possible_cell_values]
-            else
-                return false
-            end
+            return Verdicts.new.total_lookup(@possible_cell_values)
         end
 
     end
