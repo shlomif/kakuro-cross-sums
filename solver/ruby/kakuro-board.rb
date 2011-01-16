@@ -377,7 +377,7 @@ module Kakuro
                     count = 0
                     iter = get_dir_iter(init_pos, dir)
                     pos = iter.call()
-                    while (pos && (! cell(pos).solid?))
+                    while (pos && cell(pos).fillable?)
                         count += 1
                         cell(pos).set_control(dir, init_pos)
                         pos = iter.call()
