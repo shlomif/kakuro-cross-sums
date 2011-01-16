@@ -397,11 +397,18 @@ module Kakuro
             return cell(pos)._merge_constraints_step
         end
 
-        def _merge_constraints_scan
-            return to_be_filled_coords.inject(false) do |dirty, pos|
-                ret = _merge_constraint_cell_step(pos)
+        def _collect_dirty(enum, callback)
+            return enum.inject(false) do |dirty, pos|
+                ret = callback.call(pos)
                 dirty || ret
             end
+        end
+
+        def _merge_constraints_scan
+            return _collect_dirty(
+                to_be_filled_coords, 
+                lambda { |pos| return _merge_constraint_cell_step(pos) }
+            )
         end
 
         def merge_constraints
@@ -446,13 +453,10 @@ module Kakuro
         end
 
         def filter_constraints_without_cells
-            dirty = false
-            solid_coords.each do |init_pos|
-                ret = _filter_constraints_cell_step(init_pos)
-                dirty ||= ret
-            end
-
-            return dirty
+            return _collect_dirty(
+                solid_coords,
+                lambda { |pos| return _filter_constraints_cell_step(pos) }
+            )
         end
     end
 
