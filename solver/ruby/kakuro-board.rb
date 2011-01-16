@@ -22,6 +22,7 @@
 #++
 require "kakuro-perms.rb"
 require "kakuro-perms-db.rb"
+require 'enumerator'
 
 module Enumerable
     def _collect_dirty
@@ -130,6 +131,7 @@ module Kakuro
 
         def set_control(direction, pos)
             @control_cells[direction] = pos
+            return true
         end
 
         def control_cell(dir)
@@ -354,41 +356,55 @@ module Kakuro
             end
         end
 
-        def get_dir_iter(pos,dir)
-            if (dir == Down)
-                return lambda { 
-                    if (pos.y == @height-1)
-                        return false
-                    else
-                        pos = pos.bump_y
-                        return pos
-                    end
-                }
-            else
-                return lambda {
-                    if (pos.x == @width-1)
-                        return false
-                    else
-                        pos = pos.bump_x
-                        return pos
-                    end
-                }
+        class Dirs_Iter
+            include Enumerable
+
+            def initialize(init_pos, dir, dim, bump_dir)
+                @pos = init_pos
+                @dir = dir
+                @dim = dim
+                @bump_dir = bump_dir
+            end
+
+            def each
+                while (@pos.send(@dir) < @dim - 1)
+                    @pos = @pos.send(@bump_dir)
+                    yield @pos
+                end
             end
         end
 
-        def _get_dir_cell_iter(init_pos, dir)
+        E = defined?(Enumerator) ? Enumerator : Enumerable::Enumerator
 
-            iter = get_dir_iter(init_pos, dir)
-            pos = iter.call()
-            
-            return lambda {
-                ret = false
-                if pos && cell(pos).fillable?
-                    ret = cell(pos)
-                    pos = iter.call()
+        def _dir_iter_params(dir)
+            return ((dir == Down) \
+                ? ['y',@height,'bump_y'] \
+                : ['x',@width,'bump_x'])
+        end
+
+        class Dirs_Cell_Iter
+            include Enumerable
+
+            def initialize(board, init_pos, dir)
+                @board = board
+                @pos = init_pos
+                @dirs_iter = Dirs_Iter.new(@pos, *@board._dir_iter_params(dir))
+            end
+
+            def each
+                @dirs_iter.each do |pos|
+                    mycell = @board.cell(pos)
+                    if mycell.fillable?
+                        yield mycell
+                    else
+                        break
+                    end
                 end
-                return ret
-            }
+            end
+        end
+
+        def _get_dir_cells_enum(init_pos, dir)
+            return Dirs_Cell_Iter.new(self, init_pos, dir)
         end
 
         def _calc_cell_constraints(init_pos)
@@ -398,14 +414,9 @@ module Kakuro
                 user_sum = solid_cell.user_sum(dir)
 
                 if user_sum
-                    count = 0
-
-                    iter = _get_dir_cell_iter(init_pos, dir)
-
-                    while mycell = iter.call()
-                        count += 1
-                        mycell.set_control(dir, init_pos)
-                    end
+                    count = _get_dir_cells_enum(init_pos, dir).count { 
+                        |c| c.set_control(dir, init_pos)
+                    }
 
                     solid_cell.set_num_cells(dir, count)
                 end
@@ -436,14 +447,9 @@ module Kakuro
             constraint = init_cell.constraint(dir)
 
             if (constraint)
-                total_mask = 0
-
-                # TODO : Duplicate code
-
-                iter = _get_dir_cell_iter(init_pos, dir)
-                while mycell = iter.call()
-                    total_mask |= mycell.verdicts_mask
-                end
+                total_mask = _get_dir_cells_enum(init_pos, dir).inject(0) { 
+                    |t, c| t | c.verdicts_mask
+                }
 
                 return init_cell.set_new_constraint(
                     dir,
