@@ -148,6 +148,18 @@ module Kakuro
             return @control_cells.map { |pos| board.cell(pos) }
         end
 
+        def set_possible_verdicts_with_propagation(verdicts)
+            if set_possible_verdicts(verdicts)
+                v = Verdicts.new
+                if (v.contains(@verdicts_mask))
+                    @verdict = v.lookup
+                    propagate_conclusive_verdict
+                end
+            end
+
+            return
+        end
+
         public
         def solid?
             return @is_solid
@@ -236,17 +248,6 @@ module Kakuro
             end
         end
 
-        def _set_possible_verdicts_with_propagation(verdicts)
-            if set_possible_verdicts(verdicts)
-                v = Verdicts.new
-                if (v.contains(@verdicts_mask))
-                    @verdict = v.lookup
-                    propagate_conclusive_verdict
-                end
-            end
-
-            return
-        end
 
         def flush_dirty
             ret = @dirty
@@ -277,7 +278,7 @@ module Kakuro
                 @dirty ||= ret
             end
 
-            _set_possible_verdicts_with_propagation(
+            set_possible_verdicts_with_propagation(
                 merger.possible_cell_values
             )
 
