@@ -381,6 +381,24 @@ module Kakuro
 
         private
 
+        class Dirs_Iter
+            include Enumerable
+
+            def initialize(init_pos, dir, dim, bump_dir)
+                @pos = init_pos
+                @dir = dir
+                @dim = dim
+                @bump_dir = bump_dir
+            end
+
+            def each
+                while (@pos.send(@dir) < @dim - 1)
+                    @pos = @pos.send(@bump_dir)
+                    yield @pos
+                end
+            end
+        end
+
         class Dirs_Cell_Iter
             include Enumerable
 
@@ -472,30 +490,8 @@ module Kakuro
             end
         end
 
-        class Dirs_Iter
-            include Enumerable
-
-            def initialize(init_pos, dir, dim, bump_dir)
-                @pos = init_pos
-                @dir = dir
-                @dim = dim
-                @bump_dir = bump_dir
-            end
-
-            def each
-                while (@pos.send(@dir) < @dim - 1)
-                    @pos = @pos.send(@bump_dir)
-                    yield @pos
-                end
-            end
-        end
-
-
         def merge_constraints
-
-            while merge_constraints_scan()
-                true
-            end
+            true while merge_constraints_scan()
 
             return
         end
