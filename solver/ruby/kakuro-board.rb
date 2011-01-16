@@ -171,6 +171,14 @@ module Kakuro
             @constraints = []
             @init_constraints = []
             @dirty = false
+
+            process_text(content)
+
+        end
+
+        private
+
+        def process_text(content)
             if (content =~ /^\s*(\d*)\s*\\\s*(\d*)\s*$/)
                 @is_solid = true
                 if $1.length > 0
@@ -191,9 +199,10 @@ module Kakuro
                 raise ParsingError.new, \
                     "Cell contains invalid content '#{content}'"
             end
+
+            return
         end
 
-        private
         def known?
             return @verdict
         end
