@@ -122,8 +122,6 @@ module Kakuro
             return masks_a.inject(0) { |total, x| (total | x) }
         end
 
-        public
-
         def calc_dir_constraints
 
             @total_masks = []
@@ -147,6 +145,8 @@ module Kakuro
                     @total_masks[Horiz]
             )
         end
+
+        public
 
         def remaining_dir_constraints(dir)
             return @remaining_constraints[dir]         
