@@ -401,6 +401,15 @@ module Kakuro
             end
         end
 
+        def merge_constraint_cell_step(pos)
+            return cell(pos).merge_constraints_step
+        end
+
+        def merge_constraints_scan
+            return to_be_filled_coords._collect_dirty do |pos| 
+                merge_constraint_cell_step(pos)
+            end
+        end
 
         public
 
@@ -458,19 +467,11 @@ module Kakuro
             end
         end
 
-        def _merge_constraint_cell_step(pos)
-            return cell(pos).merge_constraints_step
-        end
 
-        def _merge_constraints_scan
-            return to_be_filled_coords._collect_dirty do |pos| 
-                _merge_constraint_cell_step(pos)
-            end
-        end
 
         def merge_constraints
 
-            while _merge_constraints_scan()
+            while merge_constraints_scan()
                 true
             end
 
