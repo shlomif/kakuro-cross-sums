@@ -401,7 +401,14 @@ module Kakuro
             end
         end
 
+
         public
+
+        def dir_iter_params(dir)
+            return ((dir == Down) \
+                ? ['y',@height,'bump_y'] \
+                : ['x',@width,'bump_x'])
+        end
 
         def prepare()
             solid_coords.each do |pos|
@@ -430,21 +437,13 @@ module Kakuro
             end
         end
 
-        E = defined?(Enumerator) ? Enumerator : Enumerable::Enumerator
-
-        def _dir_iter_params(dir)
-            return ((dir == Down) \
-                ? ['y',@height,'bump_y'] \
-                : ['x',@width,'bump_x'])
-        end
-
         class Dirs_Cell_Iter
             include Enumerable
 
             def initialize(board, init_pos, dir)
                 @board = board
                 @pos = init_pos
-                @dirs_iter = Dirs_Iter.new(@pos, *@board._dir_iter_params(dir))
+                @dirs_iter = Dirs_Iter.new(@pos, *@board.dir_iter_params(dir))
             end
 
             def each
