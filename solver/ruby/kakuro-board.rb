@@ -252,7 +252,6 @@ module Kakuro
             end
         end
 
-
         def flush_dirty
             ret = @dirty
             @dirty = false
@@ -263,7 +262,7 @@ module Kakuro
             return verdict+1
         end
 
-        def _merge_constraints_step
+        def merge_constraints_step
 
             merger = CellConstraintsMerger.new(
                 :constraints => board_cells_constraints,
@@ -453,7 +452,7 @@ module Kakuro
         end
 
         def _merge_constraint_cell_step(pos)
-            return cell(pos)._merge_constraints_step
+            return cell(pos).merge_constraints_step
         end
 
         def _merge_constraints_scan
