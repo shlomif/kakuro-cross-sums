@@ -161,11 +161,10 @@ module Kakuro
 
     class Cell
 
-        attr_reader :board, :id, :verdict, :verdicts_mask
+        attr_reader :board, :verdict, :verdicts_mask
 
-        def initialize(board, id, content)
+        def initialize(board, content)
             @board = board
-            @id = id
             @user_sums = []
             @control_cells = []
             @constraints = []
@@ -363,9 +362,6 @@ module Kakuro
     class Board
 
         def initialize()
-            @next_cell_id = 0
-            @cells = Array.new
-
             @matrix = Array.new
             @height = nil
             @width = nil
@@ -373,25 +369,17 @@ module Kakuro
 
         private
 
-        def next_cell_id()
-            ret = @next_cell_id
-            @next_cell_id += 1
-            return ret
-        end
-
         def parse_line(line)
             width = 0
             row = []
             while line.sub!(/\A\s*\[([^\]]*)\]\s*/, "")
                 content = $1
 
-                cell = Cell.new(self, next_cell_id(), content)
-
-                @cells << cell
+                cell = Cell.new(self, content)
 
                 width += 1
 
-                row << cell.id
+                row << cell
             end
 
             # Remove trailing space.
@@ -425,7 +413,7 @@ module Kakuro
         def cell(pos)
             # Uncomment for debugging:
             # puts "Row = #{row} ; Col = #{col}"
-            return @cells[@matrix[pos.y][pos.x]];
+            return @matrix[pos.y][pos.x];
         end
 
         class Coords_Loop
