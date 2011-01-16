@@ -25,7 +25,7 @@ require "kakuro-perms-db.rb"
 require 'enumerator'
 
 module Enumerable
-    def _collect_dirty
+    def kakuro_collect_dirty
         return inject(false) do |dirty, elem|
             ret = yield(elem)
             dirty || ret
@@ -406,7 +406,7 @@ module Kakuro
         end
 
         def merge_constraints_scan
-            return to_be_filled_coords._collect_dirty do |pos| 
+            return to_be_filled_coords.kakuro_collect_dirty do |pos| 
                 merge_constraint_cell_step(pos)
             end
         end
@@ -497,13 +497,13 @@ module Kakuro
         end
 
         def _filter_constraints_cell_step(init_pos)
-            return DIRS._collect_dirty do |dir|
+            return DIRS.kakuro_collect_dirty do |dir|
                 _filter_constraints_cell_constraint_step(init_pos, dir)
             end
         end
 
         def filter_constraints_without_cells
-            return solid_coords._collect_dirty do |pos|
+            return solid_coords.kakuro_collect_dirty do |pos|
                 _filter_constraints_cell_step(pos)
             end
         end
