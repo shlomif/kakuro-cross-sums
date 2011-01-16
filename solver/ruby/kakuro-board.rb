@@ -375,8 +375,12 @@ module Kakuro
 
                 if user_sum
                     count = 0
+
+                    # TODO : Duplicate code
+
                     iter = get_dir_iter(init_pos, dir)
                     pos = iter.call()
+
                     while (pos && cell(pos).fillable?)
                         count += 1
                         cell(pos).set_control(dir, init_pos)
@@ -418,6 +422,8 @@ module Kakuro
 
                     if (constraint)
                         total_mask = 0
+
+                        # TODO : Duplicate code
 
                         iter = get_dir_iter(init_pos, dir)
                         pos = iter.call()
