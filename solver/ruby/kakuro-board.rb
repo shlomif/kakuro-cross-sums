@@ -144,6 +144,10 @@ module Kakuro
             return @verdict
         end
 
+        def board_control_cells
+            return @control_cells.map { |pos| board.cell(pos) }
+        end
+
         public
         def solid?
             return @is_solid
@@ -228,7 +232,7 @@ module Kakuro
 
         def propagate_conclusive_verdict
             DIRS.each do |dir|
-                _board_control_cells[dir].filter_constraint(dir, verdict);
+                board_control_cells[dir].filter_constraint(dir, verdict);
             end
         end
 
@@ -254,12 +258,8 @@ module Kakuro
             return verdict+1
         end
 
-        def _board_control_cells
-            return @control_cells.map { |pos| board.cell(pos) }
-        end
-
         def _get_board_cells_constraints
-            return DIRS.map { |dir| _board_control_cells[dir].constraint(dir) } 
+            return DIRS.map { |dir| board_control_cells[dir].constraint(dir) } 
         end
 
         def _merge_constraints_step
@@ -270,7 +270,7 @@ module Kakuro
             )
 
             DIRS.each do |dir|
-                ret = _board_control_cells[dir].set_new_constraint(
+                ret = board_control_cells[dir].set_new_constraint(
                     dir,
                     merger.remaining_dir_constraints(dir)
                 )
