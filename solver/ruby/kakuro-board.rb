@@ -23,6 +23,15 @@
 require "kakuro-perms.rb"
 require "kakuro-perms-db.rb"
 
+module Enumerable
+    def _collect_dirty
+        return inject(false) do |dirty, elem|
+            ret = yield(elem)
+            dirty || ret
+        end
+    end
+end
+
 module Kakuro
     
     # Some constants
@@ -397,18 +406,10 @@ module Kakuro
             return cell(pos)._merge_constraints_step
         end
 
-        def _collect_dirty(enum, callback)
-            return enum.inject(false) do |dirty, pos|
-                ret = callback.call(pos)
-                dirty || ret
-            end
-        end
-
         def _merge_constraints_scan
-            return _collect_dirty(
-                to_be_filled_coords, 
-                lambda { |pos| return _merge_constraint_cell_step(pos) }
-            )
+            return to_be_filled_coords._collect_dirty do |pos| 
+                _merge_constraint_cell_step(pos)
+            end
         end
 
         def merge_constraints
@@ -448,17 +449,15 @@ module Kakuro
         end
 
         def _filter_constraints_cell_step(init_pos)
-            return _collect_dirty(
-                DIRS,
-                lambda { |dir| _filter_constraints_cell_constraint_step(init_pos, dir) }
-            )
+            return DIRS._collect_dirty do |dir|
+                _filter_constraints_cell_constraint_step(init_pos, dir)
+            end
         end
 
         def filter_constraints_without_cells
-            return _collect_dirty(
-                solid_coords,
-                lambda { |pos| return _filter_constraints_cell_step(pos) }
-            )
+            return solid_coords._collect_dirty do |pos|
+                _filter_constraints_cell_step(pos)
+            end
         end
     end
 
