@@ -370,8 +370,7 @@ module Kakuro
         def _calc_cell_constraints(init_pos)
             solid_cell = cell(init_pos)
 
-            # TODO : convert to DIRS.each
-            for dir in [Down, Right]
+            DIRS.each do |dir|
                 user_sum = solid_cell.user_sum(dir)
 
                 if user_sum
