@@ -281,7 +281,6 @@ module Kakuro
         end
 
         def _parse_line(line)
-            # TODO : Make sure the widths of all the lines are the same.
             width = 0
             row = []
             while line.sub!(/\A\s*\[([^\]]*)\]\s*/, "")
