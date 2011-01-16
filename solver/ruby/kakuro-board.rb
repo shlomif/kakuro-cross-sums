@@ -449,13 +449,9 @@ module Kakuro
             constraint = init_cell.constraint(dir)
 
             if (constraint)
-                total_mask = 0
-
-                # TODO : Duplicate code
-
-                _get_dir_cells_enum(init_pos, dir).each do |mycell|
-                    total_mask |= mycell.verdicts_mask
-                end
+                total_mask = _get_dir_cells_enum(init_pos, dir).inject(0) { 
+                    |t, c| t | c.verdicts_mask
+                }
 
                 return init_cell.set_new_constraint(
                     dir,
