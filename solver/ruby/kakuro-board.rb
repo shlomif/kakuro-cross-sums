@@ -22,6 +22,7 @@
 #++
 require "kakuro-perms.rb"
 require "kakuro-perms-db.rb"
+require 'enumerator'
 
 module Enumerable
     def _collect_dirty
@@ -354,26 +355,38 @@ module Kakuro
             end
         end
 
-        def get_dir_iter(pos,dir)
-            if (dir == Down)
-                return lambda { 
-                    if (pos.y == @height-1)
-                        return false
-                    else
-                        pos = pos.bump_y
-                        return pos
-                    end
-                }
-            else
-                return lambda {
-                    if (pos.x == @width-1)
-                        return false
-                    else
-                        pos = pos.bump_x
-                        return pos
-                    end
-                }
+        class Dirs_Iter
+            include Enumerable
+
+            def initialize(init_pos, dir, dim, bump_dir)
+                @pos = init_pos
+                @dir = dir
+                @dim = dim
+                @bump_dir = bump_dir
             end
+
+            def each
+                while (@pos.send(@dir) < @dim - 1)
+                    @pos = @pos.send(@bump_dir)
+                    yield @pos
+                end
+                # Temporary workaround.
+                yield false
+            end
+        end
+
+        E = defined?(Enumerator) ? Enumerator : Enumerable::Enumerator
+
+        def _dir_iter_params(dir)
+            return ((dir == Down) \
+                ? ['y',@height,'bump_y'] \
+                : ['x',@width,'bump_x'])
+        end
+
+        def get_dir_iter(pos, dir)
+            iter = Dirs_Iter.new(pos, *_dir_iter_params(dir))
+            g = E.new(iter)
+            return lambda { g.next }
         end
 
         def _get_dir_cell_iter(init_pos, dir)
