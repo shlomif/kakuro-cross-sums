@@ -381,6 +381,10 @@ module Kakuro
 
         private
 
+        def dir_cells_enum(init_pos, dir)
+            return Dirs_Cell_Iter.new(self, init_pos, dir)
+        end
+
         def calc_cell_constraints(init_pos)
             solid_cell = cell(init_pos)
 
@@ -388,7 +392,7 @@ module Kakuro
                 user_sum = solid_cell.user_sum(dir)
 
                 if user_sum
-                    count = _get_dir_cells_enum(init_pos, dir).count { 
+                    count = dir_cells_enum(init_pos, dir).count { 
                         |c| c.set_control(dir, init_pos)
                     }
 
@@ -455,10 +459,6 @@ module Kakuro
             end
         end
 
-        def _get_dir_cells_enum(init_pos, dir)
-            return Dirs_Cell_Iter.new(self, init_pos, dir)
-        end
-
         def _merge_constraint_cell_step(pos)
             return cell(pos).merge_constraints_step
         end
@@ -483,7 +483,7 @@ module Kakuro
             constraint = init_cell.constraint(dir)
 
             if (constraint)
-                total_mask = _get_dir_cells_enum(init_pos, dir).inject(0) { 
+                total_mask = dir_cells_enum(init_pos, dir).inject(0) { 
                     |t, c| t | c.verdicts_mask
                 }
 
