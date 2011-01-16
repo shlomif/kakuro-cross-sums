@@ -148,12 +148,10 @@ module Kakuro
 
         public
 
+        attr_reader :possible_cell_values
+
         def remaining_dir_constraints(dir)
             return @remaining_constraints[dir]         
-        end
-
-        def possible_cell_values
-            return @possible_cell_values
         end
 
         def has_single_verdict
