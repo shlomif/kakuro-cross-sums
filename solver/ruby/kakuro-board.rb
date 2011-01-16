@@ -370,8 +370,6 @@ module Kakuro
                     @pos = @pos.send(@bump_dir)
                     yield @pos
                 end
-                # Temporary workaround.
-                yield false
             end
         end
 
@@ -383,25 +381,25 @@ module Kakuro
                 : ['x',@width,'bump_x'])
         end
 
-        def get_dir_iter(pos, dir)
-            iter = Dirs_Iter.new(pos, *_dir_iter_params(dir))
-            g = E.new(iter)
-            return lambda { g.next }
-        end
+        class Dirs_Cell_Iter
+            include Enumerable
 
-        def _get_dir_cell_iter(init_pos, dir)
+            def initialize(board, init_pos, dir)
+                @board = board
+                @pos = init_pos
+                @dirs_iter = Dirs_Iter.new(@pos, *@board._dir_iter_params(dir))
+            end
 
-            iter = get_dir_iter(init_pos, dir)
-            pos = iter.call()
-            
-            return lambda {
-                ret = false
-                if pos && cell(pos).fillable?
-                    ret = cell(pos)
-                    pos = iter.call()
+            def each
+                @dirs_iter.each do |pos|
+                    mycell = @board.cell(pos)
+                    if mycell.fillable?
+                        yield mycell
+                    else
+                        break
+                    end
                 end
-                return ret
-            }
+            end
         end
 
         def _calc_cell_constraints(init_pos)
@@ -413,9 +411,7 @@ module Kakuro
                 if user_sum
                     count = 0
 
-                    iter = _get_dir_cell_iter(init_pos, dir)
-
-                    while mycell = iter.call()
+                    Dirs_Cell_Iter.new(self, init_pos, dir).each do |mycell|
                         count += 1
                         mycell.set_control(dir, init_pos)
                     end
@@ -453,8 +449,7 @@ module Kakuro
 
                 # TODO : Duplicate code
 
-                iter = _get_dir_cell_iter(init_pos, dir)
-                while mycell = iter.call()
+                Dirs_Cell_Iter.new(self, init_pos, dir).each do |mycell|
                     total_mask |= mycell.verdicts_mask
                 end
 
