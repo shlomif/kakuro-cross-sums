@@ -105,6 +105,58 @@ module Kakuro
         end
     end
 
+    class CellConstraintsMerger
+
+        def initialize(args)
+
+            @constraints = args[:constraints]
+            @initial_cell_values = args[:cell_values]
+
+            calc_dir_constraints()
+
+        end
+
+        def combine_masks(masks_a)
+            return masks_a.inject(0) { |total, x| (total | x) }
+        end
+
+        def calc_dir_constraints
+
+            @total_masks = []
+            @remaining_constraints = []
+
+            DIRS.each do |dir|
+                other_dir = 1 - dir
+
+                t_mask = @total_masks[other_dir] = 
+                    combine_masks(@constraints[other_dir])
+
+                @remaining_constraints[dir] = \
+                    @constraints[dir].select do |constraint| 
+                        (((constraint & t_mask) != 0) &&
+                         (constraint & @initial_cell_values != 0))
+                    end
+            end
+
+            @possible_cell_values = (
+                (@initial_cell_values & @total_masks[Vert]) & 
+                    @total_masks[Horiz]
+            )
+        end
+
+        def remaining_dir_constraints(dir)
+            return @remaining_constraints[dir]         
+        end
+
+        def possible_cell_values
+            return @possible_cell_values
+        end
+
+        def has_single_verdict
+            return Verdicts.new.total_lookup(@possible_cell_values)
+        end
+    end
+
     class Cell
 
         attr_reader :board, :id, :verdict, :verdicts_mask
@@ -165,6 +217,7 @@ module Kakuro
         end
 
         public
+
         def solid?
             return @is_solid
         end
@@ -503,57 +556,5 @@ module Kakuro
         end
     end
 
-    class CellConstraintsMerger
-
-        def initialize(args)
-
-            @constraints = args[:constraints]
-            @initial_cell_values = args[:cell_values]
-
-            calc_dir_constraints()
-
-        end
-
-        def combine_masks(masks_a)
-            return masks_a.inject(0) { |total, x| (total | x) }
-        end
-
-        def calc_dir_constraints
-
-            @total_masks = []
-            @remaining_constraints = []
-
-            DIRS.each do |dir|
-                other_dir = 1 - dir
-
-                t_mask = @total_masks[other_dir] = 
-                    combine_masks(@constraints[other_dir])
-
-                @remaining_constraints[dir] = \
-                    @constraints[dir].select do |constraint| 
-                        (((constraint & t_mask) != 0) &&
-                         (constraint & @initial_cell_values != 0))
-                    end
-            end
-
-            @possible_cell_values = (
-                (@initial_cell_values & @total_masks[Vert]) & 
-                    @total_masks[Horiz]
-            )
-        end
-
-        def remaining_dir_constraints(dir)
-            return @remaining_constraints[dir]         
-        end
-
-        def possible_cell_values
-            return @possible_cell_values
-        end
-
-        def has_single_verdict
-            return Verdicts.new.total_lookup(@possible_cell_values)
-        end
-
-    end
 
 end
