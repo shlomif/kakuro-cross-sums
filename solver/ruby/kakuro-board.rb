@@ -31,6 +31,10 @@ module Enumerable
             dirty || ret
         end
     end
+
+    def kakuro_combine_masks
+        return inject(0) { |total,x| (total | x) }
+    end
 end
 
 module Kakuro
@@ -131,7 +135,7 @@ module Kakuro
                 other_dir = 1 - dir
 
                 t_mask = @total_masks[other_dir] = 
-                    combine_masks(@constraints[other_dir])
+                    @constraints[other_dir].kakuro_combine_masks
 
                 @remaining_constraints[dir] = \
                     @constraints[dir].select do |constraint| 
@@ -518,9 +522,9 @@ module Kakuro
             constraint = init_cell.constraint(dir)
 
             if (constraint)
-                total_mask = dir_cells_enum(init_pos, dir).inject(0) { 
-                    |t, c| t | c.verdicts_mask
-                }
+                total_mask = dir_cells_enum(init_pos, dir).
+                    map { |x| x.verdicts_mask }.
+                    kakuro_combine_masks
 
                 return init_cell.set_new_constraint(
                     dir,
