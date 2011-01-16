@@ -266,12 +266,12 @@ module Kakuro
             return @init_constraints[dir]
         end
 
-        def set_new_constraint(dir, constraint)
-            if constraint.length < @constraints[dir].length
+        def set_new_constraint(dir, new_constraint)
+            if new_constraint.length < constraint(dir).length
                 @dirty = true
             end
 
-            @constraints[dir] = constraint
+            @constraints[dir] = new_constraint
 
             return flush_dirty
         end
