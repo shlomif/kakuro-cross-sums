@@ -402,7 +402,7 @@ module Kakuro
             end
         end
 
-        def _get_cell_enum(init_pos, dir)
+        def _get_dir_cells_enum(init_pos, dir)
             return Dirs_Cell_Iter.new(self, init_pos, dir)
         end
 
@@ -415,7 +415,7 @@ module Kakuro
                 if user_sum
                     count = 0
 
-                    _get_cell_enum(init_pos, dir).each do |mycell|
+                    _get_dir_cells_enum(init_pos, dir).each do |mycell|
                         count += 1
                         mycell.set_control(dir, init_pos)
                     end
@@ -453,7 +453,7 @@ module Kakuro
 
                 # TODO : Duplicate code
 
-                _get_cell_enum(init_pos, dir).each do |mycell|
+                _get_dir_cells_enum(init_pos, dir).each do |mycell|
                     total_mask |= mycell.verdicts_mask
                 end
 
