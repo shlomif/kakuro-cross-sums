@@ -160,6 +160,10 @@ module Kakuro
             return
         end
 
+        def board_cells_constraints
+            return DIRS.map { |dir| board_control_cells[dir].constraint(dir) } 
+        end
+
         public
         def solid?
             return @is_solid
@@ -259,14 +263,10 @@ module Kakuro
             return verdict+1
         end
 
-        def _get_board_cells_constraints
-            return DIRS.map { |dir| board_control_cells[dir].constraint(dir) } 
-        end
-
         def _merge_constraints_step
 
             merger = CellConstraintsMerger.new(
-                :constraints => _get_board_cells_constraints,
+                :constraints => board_cells_constraints,
                 :cell_values => verdicts_mask
             )
 
