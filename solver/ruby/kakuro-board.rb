@@ -376,6 +376,21 @@ module Kakuro
             end
         end
 
+        def _get_dir_cell_iter(init_pos, dir)
+
+            iter = get_dir_iter(init_pos, dir)
+            pos = iter.call()
+            
+            return lambda {
+                ret = false
+                if pos && cell(pos).fillable?
+                    ret = cell(pos)
+                    pos = iter.call()
+                end
+                return ret
+            }
+        end
+
         def _calc_cell_constraints(init_pos)
             solid_cell = cell(init_pos)
 
@@ -385,17 +400,12 @@ module Kakuro
                 if user_sum
                     count = 0
 
-                    # TODO : Duplicate code
+                    iter = _get_dir_cell_iter(init_pos, dir)
 
-                    iter = get_dir_iter(init_pos, dir)
-                    pos = iter.call()
-
-                    while (pos && cell(pos).fillable?)
+                    while mycell = iter.call()
                         count += 1
-                        cell(pos).set_control(dir, init_pos)
-                        pos = iter.call()
+                        mycell.set_control(dir, init_pos)
                     end
-                    iter = nil
 
                     solid_cell.set_num_cells(dir, count)
                 end
@@ -422,24 +432,20 @@ module Kakuro
         end
 
         def _filter_constraints_cell_constraint_step(init_pos, dir)
-            mycell = cell(init_pos)
-            constraint = mycell.constraint(dir)
+            init_cell = cell(init_pos)
+            constraint = init_cell.constraint(dir)
 
             if (constraint)
                 total_mask = 0
 
                 # TODO : Duplicate code
 
-                iter = get_dir_iter(init_pos, dir)
-                pos = iter.call()
-
-                while (pos && (cell(pos).fillable?))
-                    total_mask |= cell(pos).verdicts_mask
-
-                    pos = iter.call()
+                iter = _get_dir_cell_iter(init_pos, dir)
+                while mycell = iter.call()
+                    total_mask |= mycell.verdicts_mask
                 end
 
-                return mycell.set_new_constraint(
+                return init_cell.set_new_constraint(
                     dir,
                     constraint.select { |c| (c & total_mask) == c }
                 )
