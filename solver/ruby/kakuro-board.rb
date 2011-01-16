@@ -416,7 +416,7 @@ module Kakuro
             end
 
             def each
-                ( 0 .. @max_pos.y).each do |y|
+                (0 .. @max_pos.y).each do |y|
                     (0 .. @max_pos.x).each do |x|
                         yield Position.new(:x => x, :y => y)
                     end
