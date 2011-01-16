@@ -180,31 +180,38 @@ module Kakuro
 
         def init_solid(vert, horiz)
             @is_solid = true
+
             if vert.length > 0
                 @user_sums[Kakuro::Down] = vert.to_i();
             end
             if horiz.length > 0
                 @user_sums[Kakuro::Right] = horiz.to_i();
             end
+
+            return
+        end
+
+        def init_digit(digit)
+            @is_solid = false
+            @verdicts_mask = ((1 << 10) - 1)
+
+            if digit.length > 0
+                @verdict = digit.to_i()-1
+                @verdicts_mask = 1 << @verdict
+            end
+
+            return
         end
 
         def process_text(content)
             if (content =~ /^\s*(\d*)\s*\\\s*(\d*)\s*$/)
                 return init_solid($1,$2)
             elsif (content =~ /^\s*(\d*)\s*$/)
-                digit = $1
-                @is_solid = false
-                @verdicts_mask = ((1 << 10) - 1)
-                if digit.length > 0
-                    @verdict = digit.to_i()-1
-                    @verdicts_mask = 1 << @verdict
-                end
+                return init_digit($1)
             else
                 raise ParsingError.new, \
                     "Cell contains invalid content '#{content}'"
             end
-
-            return
         end
 
         def known?
