@@ -297,13 +297,20 @@ module Kakuro
         end
 
         private
+
+        def next_cell_id()
+            ret = @next_cell_id
+            @next_cell_id += 1
+            return ret
+        end
+
         def parse_line(line)
             width = 0
             row = []
             while line.sub!(/\A\s*\[([^\]]*)\]\s*/, "")
                 content = $1
 
-                cell = Cell.new(self, _next_cell_id(), content)
+                cell = Cell.new(self, next_cell_id(), content)
 
                 @cells << cell
 
@@ -339,13 +346,6 @@ module Kakuro
             end
             @height = @matrix.length
         end
-
-        def _next_cell_id()
-            ret = @next_cell_id
-            @next_cell_id += 1
-            return ret
-        end
-
 
         def cell(pos)
             # Uncomment for debugging:
