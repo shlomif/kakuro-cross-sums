@@ -336,18 +336,6 @@ module Kakuro
             end
         end
 
-        def solid_coords
-            return all_coords.select { |pos| cell(pos).solid? }
-        end
-
-        def to_be_filled_coords
-            return all_coords.select { |pos| cell(pos).to_be_filled? }
-        end
-
-        def filled_coords
-            return all_coords.select { |pos| cell(pos).filled? }
-        end
-
         def prepare()
             solid_coords.each do |pos|
                 _calc_cell_constraints(pos)
