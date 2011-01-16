@@ -139,6 +139,12 @@ module Kakuro
             end
         end
 
+        private
+        def known?
+            return @verdict
+        end
+
+        public
         def solid?
             return @is_solid
         end
@@ -148,11 +154,11 @@ module Kakuro
         end
 
         def to_be_filled?
-            return (fillable? && (! _known?))
+            return (fillable? && (! known?))
         end
 
         def filled?
-            return (fillable? && _known?)
+            return (fillable? && known?)
         end
 
         def user_sum(direction)
@@ -276,10 +282,6 @@ module Kakuro
             )
 
             return flush_dirty
-        end
-
-        def _known?
-            return @verdict
         end
     end
 
