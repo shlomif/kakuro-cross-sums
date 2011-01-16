@@ -420,33 +420,39 @@ module Kakuro
             return
         end
 
-        def _filter_constraints_cell_step(init_pos)
+        def _filter_constraints_cell_constraint_step(init_pos, dir)
             mycell = cell(init_pos)
-            dirty = false
-            DIRS.each do |dir|
-                constraint = mycell.constraint(dir)
+            constraint = mycell.constraint(dir)
 
-                if (constraint)
-                    total_mask = 0
+            if (constraint)
+                total_mask = 0
 
-                    # TODO : Duplicate code
+                # TODO : Duplicate code
 
-                    iter = get_dir_iter(init_pos, dir)
+                iter = get_dir_iter(init_pos, dir)
+                pos = iter.call()
+
+                while (pos && (cell(pos).fillable?))
+                    total_mask |= cell(pos).verdicts_mask
+
                     pos = iter.call()
-
-                    while (pos && (cell(pos).fillable?))
-                        total_mask |= cell(pos).verdicts_mask
-
-                        pos = iter.call()
-                    end
-
-                    ret = mycell.set_new_constraint(
-                        dir,
-                        constraint.select { |c| (c & total_mask) == c }
-                    )
-
-                    dirty ||= ret
                 end
+
+                return mycell.set_new_constraint(
+                    dir,
+                    constraint.select { |c| (c & total_mask) == c }
+                )
+            else
+                return false
+            end
+        end
+
+        def _filter_constraints_cell_step(init_pos)
+            dirty = false
+
+            DIRS.each do |dir|
+                ret = _filter_constraints_cell_constraint_step(init_pos, dir)
+                dirty ||= ret
             end
 
             return dirty
