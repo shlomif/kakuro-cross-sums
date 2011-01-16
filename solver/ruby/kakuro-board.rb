@@ -296,20 +296,8 @@ module Kakuro
             @width = nil
         end
 
-        def parse(board_string)
-            board_string.split(/\n+/).each do |line|
-                _parse_line(line)
-            end
-            @height = @matrix.length
-        end
-
-        def _next_cell_id()
-            ret = @next_cell_id
-            @next_cell_id += 1
-            return ret
-        end
-
-        def _parse_line(line)
+        private
+        def parse_line(line)
             width = 0
             row = []
             while line.sub!(/\A\s*\[([^\]]*)\]\s*/, "")
@@ -342,6 +330,22 @@ module Kakuro
             end
             @matrix.push(row)
         end
+
+        public
+
+        def parse(board_string)
+            board_string.split(/\n+/).each do |line|
+                parse_line(line)
+            end
+            @height = @matrix.length
+        end
+
+        def _next_cell_id()
+            ret = @next_cell_id
+            @next_cell_id += 1
+            return ret
+        end
+
 
         def cell(pos)
             # Uncomment for debugging:
