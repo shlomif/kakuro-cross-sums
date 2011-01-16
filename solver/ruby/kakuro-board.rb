@@ -226,7 +226,7 @@ module Kakuro
             @dirty = true
         end
 
-        def _propagate_conclusive_verdict
+        def propagate_conclusive_verdict
             DIRS.each do |dir|
                 _board_control_cells[dir].filter_constraint(dir, verdict);
             end
@@ -237,7 +237,7 @@ module Kakuro
                 v = Verdicts.new
                 if (v.contains(@verdicts_mask))
                     @verdict = v.lookup
-                    _propagate_conclusive_verdict
+                    propagate_conclusive_verdict
                 end
             end
 
@@ -380,7 +380,7 @@ module Kakuro
                 _calc_cell_constraints(pos)
             end
             filled_coords.each do |pos|
-                cell(pos)._propagate_conclusive_verdict
+                cell(pos).propagate_conclusive_verdict
             end
         end
 
