@@ -26,4 +26,4 @@ kakuro-perms-db.rb: gen-kakuro-perms-db.rb
 	ruby $< $@
 	
 test: all
-	rspec --color t/*.rb
+	rspec -I. --color t/*.rb
