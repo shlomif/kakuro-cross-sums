@@ -31,7 +31,7 @@ $BOARD.all_coords.each do |pos|
     if c.solid?
         print sprintf(format, ' \\\\ ')
     else
-        print sprintf(format, c.get_possible_verdicts.join(','))
+        print sprintf(format, c.get_possible_verdicts.map { |x| x+1 }.join(','))
     end
 end
 print "\n"
