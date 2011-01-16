@@ -379,9 +379,29 @@ module Kakuro
             end
         end
 
+        private
+
+        def calc_cell_constraints(init_pos)
+            solid_cell = cell(init_pos)
+
+            DIRS.each do |dir|
+                user_sum = solid_cell.user_sum(dir)
+
+                if user_sum
+                    count = _get_dir_cells_enum(init_pos, dir).count { 
+                        |c| c.set_control(dir, init_pos)
+                    }
+
+                    solid_cell.set_num_cells(dir, count)
+                end
+            end
+        end
+
+        public
+
         def prepare()
             solid_coords.each do |pos|
-                _calc_cell_constraints(pos)
+                calc_cell_constraints(pos)
             end
             filled_coords.each do |pos|
                 cell(pos).propagate_conclusive_verdict
@@ -437,22 +457,6 @@ module Kakuro
 
         def _get_dir_cells_enum(init_pos, dir)
             return Dirs_Cell_Iter.new(self, init_pos, dir)
-        end
-
-        def _calc_cell_constraints(init_pos)
-            solid_cell = cell(init_pos)
-
-            DIRS.each do |dir|
-                user_sum = solid_cell.user_sum(dir)
-
-                if user_sum
-                    count = _get_dir_cells_enum(init_pos, dir).count { 
-                        |c| c.set_control(dir, init_pos)
-                    }
-
-                    solid_cell.set_num_cells(dir, count)
-                end
-            end
         end
 
         def _merge_constraint_cell_step(pos)
