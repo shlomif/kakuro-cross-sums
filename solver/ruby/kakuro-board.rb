@@ -413,35 +413,43 @@ module Kakuro
             return
         end
 
+        def _filter_constraints_cell_step(init_pos)
+            mycell = cell(init_pos)
+            dirty = false
+            DIRS.each do |dir|
+                constraint = mycell.constraint(dir)
+
+                if (constraint)
+                    total_mask = 0
+
+                    # TODO : Duplicate code
+
+                    iter = get_dir_iter(init_pos, dir)
+                    pos = iter.call()
+
+                    while (pos && (cell(pos).fillable?))
+                        total_mask |= cell(pos).verdicts_mask
+
+                        pos = iter.call()
+                    end
+
+                    ret = mycell.set_new_constraint(
+                        dir,
+                        constraint.select { |c| (c & total_mask) == c }
+                    )
+
+                    dirty ||= ret
+                end
+            end
+
+            return dirty
+        end
+
         def filter_constraints_without_cells
             dirty = false
             solid_coords.each do |init_pos|
-                mycell = cell(init_pos)
-                DIRS.each do |dir|
-                    constraint = mycell.constraint(dir)
-
-                    if (constraint)
-                        total_mask = 0
-
-                        # TODO : Duplicate code
-
-                        iter = get_dir_iter(init_pos, dir)
-                        pos = iter.call()
-
-                        while (pos && (cell(pos).fillable?))
-                            total_mask |= cell(pos).verdicts_mask
-
-                            pos = iter.call()
-                        end
-
-                        ret = mycell.set_new_constraint(
-                            dir,
-                            constraint.select { |c| (c & total_mask) == c }
-                        )
-
-                        dirty ||= ret
-                    end
-                end
+                ret = _filter_constraints_cell_step(init_pos)
+                dirty ||= ret
             end
 
             return dirty
