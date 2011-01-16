@@ -116,9 +116,13 @@ module Kakuro
 
         end
 
+        private
+
         def combine_masks(masks_a)
             return masks_a.inject(0) { |total, x| (total | x) }
         end
+
+        public
 
         def calc_dir_constraints
 
