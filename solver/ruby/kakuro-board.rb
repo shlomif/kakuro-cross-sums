@@ -448,14 +448,10 @@ module Kakuro
         end
 
         def _filter_constraints_cell_step(init_pos)
-            dirty = false
-
-            DIRS.each do |dir|
-                ret = _filter_constraints_cell_constraint_step(init_pos, dir)
-                dirty ||= ret
-            end
-
-            return dirty
+            return _collect_dirty(
+                DIRS,
+                lambda { |dir| _filter_constraints_cell_constraint_step(init_pos, dir) }
+            )
         end
 
         def filter_constraints_without_cells
