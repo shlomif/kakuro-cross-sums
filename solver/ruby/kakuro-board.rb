@@ -347,12 +347,11 @@ module Kakuro
                 :cell_values => verdicts_mask
             )
 
-            DIRS.each do |dir|
-                ret = board_control_cells[dir].set_new_constraint(
+            @dirty = DIRS.kakuro_collect_dirty do |dir|
+                board_control_cells[dir].set_new_constraint(
                     dir,
                     merger.remaining_dir_constraints(dir)
                 )
-                @dirty ||= ret
             end
 
             set_possible_verdicts_with_propagation(
