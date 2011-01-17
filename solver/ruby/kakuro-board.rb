@@ -229,8 +229,12 @@ module Kakuro
             return @verdict = Verdicts.new.total_lookup(@verdicts_mask)
         end
 
+        def set_possible_merger_verdicts
+            return set_possible_verdicts(@merger.possible_cell_values)
+        end
+
         def set_possible_verdicts_with_propagation
-            if set_possible_verdicts(@merger.possible_cell_values) && calc_verdict
+            if set_possible_merger_verdicts && calc_verdict
                 propagate_conclusive_verdict
             end
 
