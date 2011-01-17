@@ -245,6 +245,13 @@ module Kakuro
             return DIRS.map { |dir| board_control_cells[dir].constraint(dir) } 
         end
 
+        def filter_constraint_with_mask(dir, mask)
+            return set_new_constraint(
+                dir,
+                constraint(dir).select { |c| (c & mask) == c }
+            )
+        end
+
         public
 
         def solid?
@@ -301,13 +308,6 @@ module Kakuro
             @constraints[dir] = new_constraint
 
             return flush_dirty
-        end
-
-        def filter_constraint_with_mask(dir, mask)
-            return set_new_constraint(
-                dir,
-                constraint(dir).select { |c| (c & mask) == c }
-            )
         end
 
         def filter_possible_constraint(dir, mask_promise)
