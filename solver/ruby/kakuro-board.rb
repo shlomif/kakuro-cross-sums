@@ -389,18 +389,21 @@ module Kakuro
 
         private
 
-        def parse_line(line)
-
-            width = 0
-            row = []
+        def row_from_line(line)
+            row = Array.new
 
             while line.sub!(/\A\s*\[([^\]]*)\]\s*/, "")
                 cell = Cell.new(self, $1)
 
-                width += 1
-
                 row << cell
             end
+
+            return row
+        end
+
+        def parse_line(line)
+
+            row = row_from_line(line)
 
             # Remove trailing space.
             line.sub!(/\A\s*/, "");
@@ -410,6 +413,7 @@ module Kakuro
                     "Junk after line"
             end
 
+            width = row.length
             if (@width)
                 if (width != @width)
                     raise ParsingError.new, \
@@ -418,6 +422,7 @@ module Kakuro
             else
                 @width = width
             end
+
             @matrix.push(row)
         end
 
