@@ -225,9 +225,13 @@ module Kakuro
             return @control_cells.map { |pos| board.cell(pos) }
         end
 
+        def calc_verdict
+            return @verdict = Verdicts.new.total_lookup(@verdicts_mask)
+        end
+
         def set_possible_verdicts_with_propagation(verdicts)
             if set_possible_verdicts(verdicts)
-                if @verdict = Verdicts.new.total_lookup(@verdicts_mask)
+                if calc_verdict
                     propagate_conclusive_verdict
                 end
             end
