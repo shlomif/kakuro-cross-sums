@@ -545,25 +545,33 @@ module Kakuro
             end
         end
 
-        def calc_total_mask(init_pos, dir)
-            return dir_cells_enum(init_pos, dir).map { |x| x.verdicts_mask }.
-                kakuro_combine_masks
+        class ConstraintHandler
+            def initialize(board, init_pos, dir)
+                @board = board
+                @init_pos = init_pos
+                @dir = dir
+            end
+
+            def run
+                @init_cell = @board.cell(@init_pos)
+                @constraint = @init_cell.constraint(@dir)
+
+                return @constraint && set_new_constraint
+            end
+
+            private
+            def set_new_constraint
+                total_mask = @board.calc_total_mask(@init_pos, @dir)
+
+                return @init_cell.set_new_constraint(
+                    @dir,
+                    @constraint.select { |c| (c & total_mask) == c }
+                )
+            end
         end
 
         def filter_constraints_cell_constraint_step(init_pos, dir)
-            init_cell = cell(init_pos)
-            constraint = init_cell.constraint(dir)
-
-            if (constraint)
-                total_mask = calc_total_mask(init_pos, dir)
-
-                return init_cell.set_new_constraint(
-                    dir,
-                    constraint.select { |c| (c & total_mask) == c }
-                )
-            else
-                return false
-            end
+            return ConstraintHandler.new(self, init_pos, dir).run
         end
 
         def filter_constraints_cell_step(init_pos)
@@ -573,6 +581,11 @@ module Kakuro
         end
 
         public
+
+        def calc_total_mask(init_pos, dir)
+            return dir_cells_enum(init_pos, dir).map { |x| x.verdicts_mask }.
+                kakuro_combine_masks
+        end
 
         def dir_iter_params(dir)
             return ((dir == DOWN) \
