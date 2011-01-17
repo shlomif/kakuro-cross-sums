@@ -412,11 +412,7 @@ module Kakuro
             end
         end
 
-
-        def parse_line(line)
-
-            row = row_from_line(line)
-
+        def verify_line_end(line)
             # Remove trailing space.
             line.sub!(/\A\s*/, "");
             # Die if there's junk after the line.
@@ -424,6 +420,13 @@ module Kakuro
                 raise ParsingError.new, \
                     "Junk after line"
             end
+        end
+
+        def parse_line(line)
+
+            row = row_from_line(line)
+
+            verify_line_end(line)
 
             assign_or_verify_width(row.length)
 
