@@ -349,13 +349,16 @@ module Kakuro
             )
         end
 
-        public
-        def merge_constraints_step
-
+        def init_merger
             @merger = CellConstraintsMerger.new(
                 :constraints => board_cells_constraints,
                 :cell_values => verdicts_mask
             )
+        end
+
+        public
+        def merge_constraints_step
+            init_merger
 
             @dirty = DIRS.kakuro_collect_dirty do |dir|
                 set_control_cell_constraint(dir)
