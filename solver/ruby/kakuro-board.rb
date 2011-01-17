@@ -333,6 +333,7 @@ module Kakuro
         def flush_dirty
             ret = @dirty
             @dirty = false
+            @merger = nil
             return ret
         end
 
@@ -340,22 +341,28 @@ module Kakuro
             return verdict+1
         end
 
+        private
+        def set_control_cell_constraint(dir)
+            return board_control_cells[dir].set_new_constraint(
+                dir,
+                @merger.remaining_dir_constraints(dir)
+            )
+        end
+
+        public
         def merge_constraints_step
 
-            merger = CellConstraintsMerger.new(
+            @merger = CellConstraintsMerger.new(
                 :constraints => board_cells_constraints,
                 :cell_values => verdicts_mask
             )
 
             @dirty = DIRS.kakuro_collect_dirty do |dir|
-                board_control_cells[dir].set_new_constraint(
-                    dir,
-                    merger.remaining_dir_constraints(dir)
-                )
+                set_control_cell_constraint(dir)
             end
 
             set_possible_verdicts_with_propagation(
-                merger.possible_cell_values
+                @merger.possible_cell_values
             )
 
             return flush_dirty
