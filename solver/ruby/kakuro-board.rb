@@ -230,10 +230,8 @@ module Kakuro
         end
 
         def set_possible_verdicts_with_propagation(verdicts)
-            if set_possible_verdicts(verdicts)
-                if calc_verdict
-                    propagate_conclusive_verdict
-                end
+            if set_possible_verdicts(verdicts) && calc_verdict
+                propagate_conclusive_verdict
             end
 
             return
