@@ -80,7 +80,7 @@ module Kakuro
         end
     end
 
-    class Constraint
+    class InitConstraint
         attr_reader :num_cells, :sum
 
         def initialize(sum, num_cells)
@@ -273,7 +273,7 @@ module Kakuro
         end
 
         def set_num_cells(dir, num_cells)
-            @init_constraints[dir] = Constraint.new(
+            @init_constraints[dir] = InitConstraint.new(
                 *(Kakuro::Perms.new.human_to_internal(
                     user_sum(dir), num_cells
                 ))
