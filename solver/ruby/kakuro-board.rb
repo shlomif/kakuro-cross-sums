@@ -562,8 +562,6 @@ module Kakuro
                 @board = board
                 @init_pos = init_pos
                 @dir = dir
-
-                @init_cell = board.cell(init_pos)
             end
 
             def run
@@ -574,7 +572,11 @@ module Kakuro
             end
 
             private
-            attr_reader :dir, :init_pos, :board, :init_cell
+            attr_reader :dir, :init_pos, :board
+
+            def init_cell
+                return board.cell(init_pos)
+            end
         end
 
         def filter_constraints_cell_constraint_step(init_pos, dir)
