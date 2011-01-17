@@ -229,8 +229,8 @@ module Kakuro
             return @verdict = Verdicts.new.total_lookup(@verdicts_mask)
         end
 
-        def set_possible_verdicts_with_propagation(verdicts)
-            if set_possible_verdicts(verdicts) && calc_verdict
+        def set_possible_verdicts_with_propagation
+            if set_possible_verdicts(@merger.possible_cell_values) && calc_verdict
                 propagate_conclusive_verdict
             end
 
@@ -369,10 +369,7 @@ module Kakuro
             init_merger
 
             set_all_control_cell_constrains
-
-            set_possible_verdicts_with_propagation(
-                @merger.possible_cell_values
-            )
+            set_possible_verdicts_with_propagation
 
             return flush_dirty
         end
