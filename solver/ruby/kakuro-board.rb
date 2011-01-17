@@ -308,6 +308,13 @@ module Kakuro
                                       select { |c| (c & mask) == c })
         end
 
+        def filter_possible_constraint(dir, mask_promise)
+            return (
+                constraint(dir) && 
+                filter_constraint_with_mask(dir, mask_promise.call())
+            )
+        end
+
         def get_possible_verdicts
             return (0 .. 8).select { |x| (@verdicts_mask & (1 << x)) != 0 }
         end
@@ -560,19 +567,14 @@ module Kakuro
             end
 
             def run
-                return init_cell.constraint(dir) && set_new_constraint
+                return init_cell.filter_possible_constraint(
+                    dir,
+                    lambda { board.calc_total_mask(init_pos, dir) }
+                )
             end
 
             private
-
-            attr_reader :dir, :init_pos, :constraint, :board, :init_cell
-
-            def set_new_constraint
-                return init_cell.filter_constraint_with_mask(
-                    dir, 
-                    board.calc_total_mask(init_pos, dir)
-                )
-            end
+            attr_reader :dir, :init_pos, :board, :init_cell
         end
 
         def filter_constraints_cell_constraint_step(init_pos, dir)
