@@ -356,13 +356,19 @@ module Kakuro
             )
         end
 
+        def set_all_control_cell_constrains
+            @dirty = DIRS.kakuro_collect_dirty do |dir|
+                set_control_cell_constraint(dir)
+            end
+
+            return
+        end
+
         public
         def merge_constraints_step
             init_merger
 
-            @dirty = DIRS.kakuro_collect_dirty do |dir|
-                set_control_cell_constraint(dir)
-            end
+            set_all_control_cell_constrains
 
             set_possible_verdicts_with_propagation(
                 @merger.possible_cell_values
