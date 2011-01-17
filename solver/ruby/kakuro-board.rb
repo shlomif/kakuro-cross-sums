@@ -550,22 +550,25 @@ module Kakuro
                 @board = board
                 @init_pos = init_pos
                 @dir = dir
+
+                @init_cell = board.cell(init_pos)
+                @constraint = init_cell.constraint(dir)
             end
 
             def run
-                @init_cell = @board.cell(@init_pos)
-                @constraint = @init_cell.constraint(@dir)
-
-                return @constraint && set_new_constraint
+                return constraint && set_new_constraint
             end
 
             private
-            def set_new_constraint
-                total_mask = @board.calc_total_mask(@init_pos, @dir)
 
-                return @init_cell.set_new_constraint(
-                    @dir,
-                    @constraint.select { |c| (c & total_mask) == c }
+            attr_reader :dir, :init_pos, :constraint, :board, :init_cell
+
+            def set_new_constraint
+                total_mask = board.calc_total_mask(init_pos, dir)
+
+                return init_cell.set_new_constraint(
+                    dir,
+                    constraint.select { |c| (c & total_mask) == c }
                 )
             end
         end
