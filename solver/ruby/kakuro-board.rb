@@ -398,6 +398,8 @@ module Kakuro
                 row << cell
             end
 
+            verify_line_end(line)
+
             return row
         end
 
@@ -425,8 +427,6 @@ module Kakuro
         def parse_line(line)
 
             row = row_from_line(line)
-
-            verify_line_end(line)
 
             assign_or_verify_width(row.length)
 
@@ -545,14 +545,17 @@ module Kakuro
             end
         end
 
+        def calc_total_mask(init_pos, dir)
+            return dir_cells_enum(init_pos, dir).map { |x| x.verdicts_mask }.
+                kakuro_combine_masks
+        end
+
         def filter_constraints_cell_constraint_step(init_pos, dir)
             init_cell = cell(init_pos)
             constraint = init_cell.constraint(dir)
 
             if (constraint)
-                total_mask = dir_cells_enum(init_pos, dir).
-                    map { |x| x.verdicts_mask }.
-                    kakuro_combine_masks
+                total_mask = calc_total_mask(init_pos, dir)
 
                 return init_cell.set_new_constraint(
                     dir,
