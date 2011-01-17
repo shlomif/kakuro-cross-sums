@@ -41,9 +41,9 @@ describe "Merge Two Constraints" do
             :cell_values => (0..8).inject(0) { |total,x| (total | (1 << x))}
         )
         
-        merger.remaining_dir_constraints(Kakuro::Vert).should == \
+        merger.remaining_dir_constraints(Kakuro::VERT).should == \
             [(1 << 0)|(1 << 2)]
-        merger.remaining_dir_constraints(Kakuro::Horiz).should == \
+        merger.remaining_dir_constraints(Kakuro::HORIZ).should == \
             [(1 << 0)|(1 << 1)]
 
         merger.possible_cell_values.should == (1 << 0)
@@ -66,9 +66,9 @@ describe "[[1,2]] and [[1,8],[2,7],[3,6],[4,5]]" do
             :cell_values => ((0..8).inject(0) { |total,x| (total | (1 << x))})
         )
         
-        merger.remaining_dir_constraints(Kakuro::Vert).should == \
+        merger.remaining_dir_constraints(Kakuro::VERT).should == \
             [(1 << 0)|(1 << 1)]
-        merger.remaining_dir_constraints(Kakuro::Horiz).should == \
+        merger.remaining_dir_constraints(Kakuro::HORIZ).should == \
             [ ((1 << 0)|(1 << 7)), ((1 << 1)|(1 << 6)), ]
 
         merger.possible_cell_values.should == ((1 << 0)|(1 << 1))
@@ -91,9 +91,9 @@ describe "[[1,2]] and [[1,8],[2,7],[3,6],[4,5]] with 1 alone" do
             :cell_values => ((0..0).inject(0) { |total,x| (total | (1 << x))})
         )
         
-        merger.remaining_dir_constraints(Kakuro::Vert).should == \
+        merger.remaining_dir_constraints(Kakuro::VERT).should == \
             [(1 << 0)|(1 << 1)]
-        merger.remaining_dir_constraints(Kakuro::Horiz).should == \
+        merger.remaining_dir_constraints(Kakuro::HORIZ).should == \
             [ ((1 << 0)|(1 << 7)), ]
 
         merger.possible_cell_values.should == (1 << 0)

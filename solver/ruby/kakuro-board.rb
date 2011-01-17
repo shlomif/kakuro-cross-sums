@@ -40,10 +40,10 @@ end
 module Kakuro
     
     # Some constants
-    Down = Vert = 0
-    Right = Horiz = 1
+    DOWN = VERT = 0
+    RIGHT = HORIZ = 1
 
-    DIRS = [Vert, Horiz,]
+    DIRS = [VERT, HORIZ,]
 
     class ParsingError < RuntimeError
         def initialize()
@@ -53,7 +53,7 @@ module Kakuro
     class Verdicts
         MAX_DIGIT = 9
 
-        Verdicts_Map = (1 .. MAX_DIGIT).map { |x| x-1 }.inject({}) { 
+        VERDICTS_MAP = (1 .. MAX_DIGIT).map { |x| x-1 }.inject({}) { 
             |h, n| h[1 << n] = n ; h
         }
 
@@ -62,8 +62,8 @@ module Kakuro
         end
 
         def contains(bitmask)
-            if Verdicts_Map.has_key?(bitmask)
-                @val = Verdicts_Map[bitmask]
+            if VERDICTS_MAP.has_key?(bitmask)
+                @val = VERDICTS_MAP[bitmask]
                 return true
             else
                 @val = nil
@@ -145,8 +145,8 @@ module Kakuro
             end
 
             @possible_cell_values = (
-                (@initial_cell_values & @total_masks[Vert]) & 
-                    @total_masks[Horiz]
+                (@initial_cell_values & @total_masks[VERT]) & 
+                    @total_masks[HORIZ]
             )
         end
 
@@ -185,10 +185,10 @@ module Kakuro
             @is_solid = true
 
             if vert.length > 0
-                @user_sums[Kakuro::Down] = vert.to_i();
+                @user_sums[Kakuro::DOWN] = vert.to_i();
             end
             if horiz.length > 0
-                @user_sums[Kakuro::Right] = horiz.to_i();
+                @user_sums[Kakuro::RIGHT] = horiz.to_i();
             end
 
             return
@@ -575,7 +575,7 @@ module Kakuro
         public
 
         def dir_iter_params(dir)
-            return ((dir == Down) \
+            return ((dir == DOWN) \
                 ? ['y',@height,'bump_y'] \
                 : ['x',@width,'bump_x'])
         end
