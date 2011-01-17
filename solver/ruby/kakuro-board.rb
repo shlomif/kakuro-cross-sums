@@ -360,7 +360,7 @@ module Kakuro
             )
         end
 
-        def set_all_control_cell_constrains
+        def set_all_control_cell_constraints
             @dirty = DIRS.kakuro_collect_dirty do |dir|
                 set_control_cell_constraint(dir)
             end
@@ -372,7 +372,7 @@ module Kakuro
         def merge_constraints_step
             init_merger
 
-            set_all_control_cell_constrains
+            set_all_control_cell_constraints
             set_possible_verdicts_with_propagation
 
             return flush_dirty
