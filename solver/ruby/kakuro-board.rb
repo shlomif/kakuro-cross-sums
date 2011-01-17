@@ -309,10 +309,8 @@ module Kakuro
         end
 
         def filter_possible_constraint(dir, mask_promise)
-            return (
-                constraint(dir) && 
+            return constraint(dir) && 
                 filter_constraint_with_mask(dir, mask_promise.call())
-            )
         end
 
         def get_possible_verdicts
