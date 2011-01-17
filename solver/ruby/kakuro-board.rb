@@ -303,6 +303,11 @@ module Kakuro
             return flush_dirty
         end
 
+        def filter_constraint_with_mask(dir, mask)
+            return set_new_constraint(dir, constraint(dir).
+                                      select { |c| (c & mask) == c })
+        end
+
         def get_possible_verdicts
             return (0 .. 8).select { |x| (@verdicts_mask & (1 << x)) != 0 }
         end
@@ -566,10 +571,7 @@ module Kakuro
             def set_new_constraint
                 total_mask = board.calc_total_mask(init_pos, dir)
 
-                return init_cell.set_new_constraint(
-                    dir,
-                    constraint.select { |c| (c & total_mask) == c }
-                )
+                return init_cell.filter_constraint_with_mask(dir, total_mask)
             end
         end
 
