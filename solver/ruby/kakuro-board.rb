@@ -390,12 +390,12 @@ module Kakuro
         private
 
         def parse_line(line)
+
             width = 0
             row = []
-            while line.sub!(/\A\s*\[([^\]]*)\]\s*/, "")
-                content = $1
 
-                cell = Cell.new(self, content)
+            while line.sub!(/\A\s*\[([^\]]*)\]\s*/, "")
+                cell = Cell.new(self, $1)
 
                 width += 1
 
