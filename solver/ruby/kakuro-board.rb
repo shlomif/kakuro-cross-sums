@@ -557,11 +557,10 @@ module Kakuro
                 @dir = dir
 
                 @init_cell = board.cell(init_pos)
-                @constraint = init_cell.constraint(dir)
             end
 
             def run
-                return constraint && set_new_constraint
+                return init_cell.constraint(dir) && set_new_constraint
             end
 
             private
@@ -569,9 +568,10 @@ module Kakuro
             attr_reader :dir, :init_pos, :constraint, :board, :init_cell
 
             def set_new_constraint
-                total_mask = board.calc_total_mask(init_pos, dir)
-
-                return init_cell.filter_constraint_with_mask(dir, total_mask)
+                return init_cell.filter_constraint_with_mask(
+                    dir, 
+                    board.calc_total_mask(init_pos, dir)
+                )
             end
         end
 
