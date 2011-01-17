@@ -304,8 +304,10 @@ module Kakuro
         end
 
         def filter_constraint_with_mask(dir, mask)
-            return set_new_constraint(dir, constraint(dir).
-                                      select { |c| (c & mask) == c })
+            return set_new_constraint(
+                dir,
+                constraint(dir).select { |c| (c & mask) == c }
+            )
         end
 
         def filter_possible_constraint(dir, mask_promise)
