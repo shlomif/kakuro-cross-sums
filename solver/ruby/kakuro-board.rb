@@ -227,9 +227,7 @@ module Kakuro
 
         def set_possible_verdicts_with_propagation(verdicts)
             if set_possible_verdicts(verdicts)
-                v = Verdicts.new
-                if (v.contains(@verdicts_mask))
-                    @verdict = v.lookup
+                if @verdict = Verdicts.new.total_lookup(@verdicts_mask)
                     propagate_conclusive_verdict
                 end
             end
