@@ -401,6 +401,18 @@ module Kakuro
             return row
         end
 
+        def assign_or_verify_width(width)
+            if (@width)
+                if (width != @width)
+                    raise ParsingError.new, \
+                        "width of rows (in cells) is not identical"
+                end
+            else
+                @width = width
+            end
+        end
+
+
         def parse_line(line)
 
             row = row_from_line(line)
@@ -413,15 +425,7 @@ module Kakuro
                     "Junk after line"
             end
 
-            width = row.length
-            if (@width)
-                if (width != @width)
-                    raise ParsingError.new, \
-                        "width of rows (in cells) is not identical"
-                end
-            else
-                @width = width
-            end
+            assign_or_verify_width(row.length)
 
             @matrix.push(row)
         end
