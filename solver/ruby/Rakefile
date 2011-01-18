@@ -1,21 +1,25 @@
-require "bundler/setup"
-Bundler::GemHelper.install_tasks
+# require "bundler/setup"
+# Bundler::GemHelper.install_tasks
 
-require 'spec/rake/spectask'
+#require 'spec/rake/spectask'
+require 'rubygems'
+require 'rspec/core/rake_task'
 
-Spec::Rake::SpecTask.new("spec") do |t|
-  t.spec_files = FileList['spec/**/*_spec.rb']
-  t.spec_opts = ['--color']
+RSpec::Core::RakeTask.new(:spec) do |t|
+    # t.spec_files = FileList['t/**/*.rb']
+    t.pattern = Dir.glob('t/**/*.rb')
+    t.rspec_opts = ['--color']
 end
-
-Spec::Rake::SpecTask.new("rcov_spec") do |t|
-  t.spec_files = FileList['spec/**/*_spec.rb']
-  t.spec_opts = ['--color']
-  t.rcov = true
-  t.rcov_opts = ['--exclude', '^spec,/gems/']
-end
-
-task :test => :spec
+# 
+# Spec::Rake::SpecTask.new("rcov_spec") do |t|
+#   t.spec_files = FileList['spec/**/*_spec.rb']
+#   t.spec_opts = ['--color']
+#   t.rcov = true
+#   t.rcov_opts = ['--exclude', '^spec,/gems/']
+# end
+# 
+# task :test => :spec
 
 desc "Run specs as default activity"
 task :default => :spec
+task :test => :spec
