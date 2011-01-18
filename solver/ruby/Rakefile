@@ -1,9 +1,8 @@
-# require "bundler/setup"
-# Bundler::GemHelper.install_tasks
-
-#require 'spec/rake/spectask'
 require 'rubygems'
 require 'rspec/core/rake_task'
+
+# require 'bundler/setup'
+# Bundler::GemHelper.install_tasks
 
 RSpec::Core::RakeTask.new(:spec) do |t|
     # t.spec_files = FileList['t/**/*.rb']
