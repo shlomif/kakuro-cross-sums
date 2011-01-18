@@ -4,6 +4,7 @@ bin/dump-board-bb-easy-2011-01-15.rb
 bin/dump-board-menneske.no-359426.rb
 bin/dump-board.rb
 bin/gen-kakuro-perms-db.rb
+.gemtest
 gen-kakuro-perms-db.rb
 kakuro_solver.gemspec
 lib/kakuro_solver/board.rb
