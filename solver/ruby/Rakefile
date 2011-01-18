@@ -4,6 +4,12 @@ require 'rspec/core/rake_task'
 # require 'bundler/setup'
 # Bundler::GemHelper.install_tasks
 
+$DB_FILE = 'lib/kakuro_solver/perms_db.rb'
+$GEN_DB = './bin/gen-kakuro-perms-db.rb'
+file $DB_FILE => [$GEN_DB] do
+    sh "ruby #{$GEN_DB} #{$DB_FILE}"
+end
+
 RSpec::Core::RakeTask.new(:spec) do |t|
     # t.spec_files = FileList['t/**/*.rb']
     t.pattern = 't/**/*_spec.rb'
