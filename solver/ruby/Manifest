@@ -5,7 +5,6 @@ bin/dump-board-menneske.no-359426.rb
 bin/dump-board.rb
 bin/gen-kakuro-perms-db.rb
 .gemtest
-gen-kakuro-perms-db.rb
 kakuro_solver.gemspec
 lib/kakuro_solver/board.rb
 lib/kakuro_solver/perms_db.rb

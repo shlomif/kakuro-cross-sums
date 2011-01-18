@@ -14,9 +14,9 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "kakuro_solver"
 
-  # s.files         = `git ls-files`.split("\n")
-  # s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  # s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.files         = `cat Manifest`.split("\n")
+  s.test_files    = `cat Manifest`.split("\n").select { |x| x =~ /^t\// }
+  # s.executables   = `cat Manifest`.split("\n").select { |x| x =~ /^bin\// }
   s.require_paths = ["lib"]
   
   # s.add_dependency "text-format", "1.0.0"
@@ -25,6 +25,6 @@ Gem::Specification.new do |s|
   # s.add_dependency "launchy", "~> 0.3.7"
 
   s.add_development_dependency "rake"
-  s.add_development_dependency "rspec", "~>1.3.1"
+  s.add_development_dependency "rspec", "~>2.0.0"
   s.add_development_dependency "bundler"
 end
