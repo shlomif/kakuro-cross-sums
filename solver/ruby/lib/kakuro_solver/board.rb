@@ -20,8 +20,8 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
-require "kakuro-perms.rb"
-require "kakuro-perms-db.rb"
+require "kakuro_solver/perms"
+require "kakuro_solver/perms_db"
 require 'enumerator'
 
 module Enumerable

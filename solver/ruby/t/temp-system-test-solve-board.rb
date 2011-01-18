@@ -22,7 +22,7 @@
 #++
 describe "System Test 1" do
     before do
-        @got_output = `ruby -I. bin/dump-board.rb`
+        @got_output = `ruby -Ilib bin/dump-board.rb`
     end
 
     it "should remain the same" do

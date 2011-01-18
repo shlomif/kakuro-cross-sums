@@ -20,10 +20,13 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
-all: kakuro-perms-db.rb
 
-kakuro-perms-db.rb: gen-kakuro-perms-db.rb
+DB_FILE = lib/kakuro_solver/perms_db.rb
+
+all: $(DB_FILE)
+
+$(DB_FILE): ./bin/gen-kakuro-perms-db.rb
 	ruby $< $@
 	
 test: all
-	rspec -I. --color t/*.rb
+	rspec -Ilib --color t/*.rb

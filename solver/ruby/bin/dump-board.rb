@@ -1,4 +1,4 @@
-require "kakuro-board.rb"
+require "kakuro_solver/board"
 
 puts "Before new"
 $BOARD = Kakuro::Board.new

@@ -20,7 +20,7 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
-require "kakuro-perms.rb"
+require "kakuro_solver/perms"
 
 def human_get_perms(mutator, sum, num)
     perms = mutator.get_perms(*mutator.human_to_internal(sum, num))
