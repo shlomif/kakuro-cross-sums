@@ -13,8 +13,8 @@ lib/kakuro_solver/perms.rb
 Makefile
 Rakefile
 t/
-t/check-perms.rb
-t/merge-constraints.rb
-t/parse-board.rb
-t/solve-board.rb
-t/temp-system-test-solve-board.rb
+t/check-perms_spec.rb
+t/merge-constraints_spec.rb
+t/parse-board_spec.rb
+t/solve-board_spec.rb
+t/temp-system-test-solve-board_spec.rb
