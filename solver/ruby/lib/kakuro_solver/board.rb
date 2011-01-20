@@ -137,14 +137,18 @@ module Kakuro
             return
         end
 
+        def calc_constraints_loop
+            DIRS.each do |dir|
+                calc_dir_constraint(dir)
+            end
+        end
+
         def calc_all
 
             @remaining_constraints = []
             @possible_cell_values = @initial_cell_values
 
-            DIRS.each do |dir|
-                calc_dir_constraint(dir)
-            end
+            calc_constraints_loop
 
             return
         end
