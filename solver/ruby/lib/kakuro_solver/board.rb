@@ -116,28 +116,34 @@ module Kakuro
             @constraints = args[:constraints]
             @initial_cell_values = args[:cell_values]
 
-            calc_dir_constraints()
+            calc_all
 
         end
 
         private
 
-        def calc_dir_constraints
+        def calc_dir_constraint(dir)
+            other_dir = 1 - dir
+
+            t_mask = @constraints[other_dir].kakuro_combine_masks
+            @possible_cell_values &= t_mask
+
+            @remaining_constraints[dir] = \
+                @constraints[dir].select do |constraint| 
+                    (((constraint & t_mask) != 0) &&
+                     (constraint & @initial_cell_values != 0))
+                end
+
+            return
+        end
+
+        def calc_all
 
             @remaining_constraints = []
             @possible_cell_values = @initial_cell_values
 
             DIRS.each do |dir|
-                other_dir = 1 - dir
-
-                t_mask = @constraints[other_dir].kakuro_combine_masks
-                @possible_cell_values &= t_mask
-
-                @remaining_constraints[dir] = \
-                    @constraints[dir].select do |constraint| 
-                        (((constraint & t_mask) != 0) &&
-                         (constraint & @initial_cell_values != 0))
-                    end
+                calc_dir_constraint(dir)
             end
 
             return
