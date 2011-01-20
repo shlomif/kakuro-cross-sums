@@ -405,9 +405,7 @@ module Kakuro
             row = Array.new
 
             while line.sub!(/\A\s*\[([^\]]*)\]\s*/, "")
-                cell = Cell.new(self, $1)
-
-                row << cell
+                row << Cell.new(self, $1)
             end
 
             verify_line_end(line)
