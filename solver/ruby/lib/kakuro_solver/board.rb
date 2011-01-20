@@ -122,10 +122,6 @@ module Kakuro
 
         private
 
-        def combine_masks(masks_a)
-            return masks_a.inject(0) { |total, x| (total | x) }
-        end
-
         def calc_dir_constraints
 
             total_masks = []
