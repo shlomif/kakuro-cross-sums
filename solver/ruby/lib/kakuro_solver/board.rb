@@ -148,6 +148,8 @@ module Kakuro
                 (@initial_cell_values & total_masks[VERT]) & 
                     total_masks[HORIZ]
             )
+
+            return
         end
 
         public
