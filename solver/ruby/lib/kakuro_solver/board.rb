@@ -124,7 +124,6 @@ module Kakuro
 
         def calc_dir_constraints
 
-            total_masks = []
             @remaining_constraints = []
             @possible_cell_values = @initial_cell_values
 
