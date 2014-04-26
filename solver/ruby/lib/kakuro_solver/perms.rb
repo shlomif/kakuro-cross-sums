@@ -20,7 +20,7 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
-require 'lib/kakuro_solver/perms_db'
+require 'kakuro_solver/perms_db.rb'
 
 module Kakuro
     class Perms
