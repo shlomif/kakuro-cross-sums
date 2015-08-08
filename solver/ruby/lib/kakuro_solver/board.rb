@@ -38,7 +38,7 @@ module Enumerable
 end
 
 module Kakuro
-    
+
     # Some constants
     DOWN = VERT = 0
     RIGHT = HORIZ = 1
@@ -53,7 +53,7 @@ module Kakuro
     class Verdicts
         MAX_DIGIT = 9
 
-        VERDICTS_MAP = (1 .. MAX_DIGIT).map { |x| x-1 }.inject({}) { 
+        VERDICTS_MAP = (1 .. MAX_DIGIT).map { |x| x-1 }.inject({}) {
             |h, n| h[1 << n] = n ; h
         }
 
@@ -129,7 +129,7 @@ module Kakuro
             @possible_cell_values &= t_mask
 
             @remaining_constraints[dir] = \
-                @constraints[dir].select do |constraint| 
+                @constraints[dir].select do |constraint|
                     (((constraint & t_mask) != 0) &&
                      (constraint & @initial_cell_values != 0))
                 end
@@ -158,7 +158,7 @@ module Kakuro
         attr_reader :possible_cell_values
 
         def remaining_dir_constraints(dir)
-            return @remaining_constraints[dir]         
+            return @remaining_constraints[dir]
         end
 
         def has_single_verdict
@@ -245,7 +245,7 @@ module Kakuro
         end
 
         def board_cells_constraints
-            return DIRS.map { |dir| board_control_cells[dir].constraint(dir) } 
+            return DIRS.map { |dir| board_control_cells[dir].constraint(dir) }
         end
 
         def filter_constraint_with_mask(dir, mask)
@@ -314,7 +314,7 @@ module Kakuro
         end
 
         def filter_possible_constraint(dir, mask_promise)
-            return constraint(dir) && 
+            return constraint(dir) &&
                 filter_constraint_with_mask(dir, mask_promise.call())
         end
 
@@ -335,9 +335,9 @@ module Kakuro
 
         def filter_constraint(dir, verdict)
             # puts "Filtering #{dir} with #{verdict}"
-            @constraints[dir] = @constraints[dir].map { |x| 
+            @constraints[dir] = @constraints[dir].map { |x|
                 # puts "Old x : #{x} ; New x : #{x & (~(1 << verdict))}"
-                x & (~(1 << verdict)) 
+                x & (~(1 << verdict))
 
             }
             @dirty = true
@@ -481,7 +481,7 @@ module Kakuro
             return Coords_Loop.new(Position.new(:x => @width-1, :y=>@height-1))
         end
 
-        [:solid, :to_be_filled, :filled].each do |meth| 
+        [:solid, :to_be_filled, :filled].each do |meth|
             define_method "#{meth}_coords" do
                 all_coords.select { |pos| cell(pos).send("#{meth}?") }
             end
@@ -539,7 +539,7 @@ module Kakuro
                 user_sum = solid_cell.user_sum(dir)
 
                 if user_sum
-                    count = dir_cells_enum(init_pos, dir).count { 
+                    count = dir_cells_enum(init_pos, dir).count {
                         |c| c.set_control(dir, init_pos)
                     }
 
@@ -553,7 +553,7 @@ module Kakuro
         end
 
         def merge_constraints_scan
-            return to_be_filled_coords.kakuro_collect_dirty do |pos| 
+            return to_be_filled_coords.kakuro_collect_dirty do |pos|
                 merge_constraint_cell_step(pos)
             end
         end

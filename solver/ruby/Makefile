@@ -27,6 +27,6 @@ all: $(DB_FILE)
 
 $(DB_FILE): ./bin/gen-kakuro-perms-db.rb
 	ruby $< $@
-	
+
 test: all
 	rspec -Ilib --color t/*.rb
