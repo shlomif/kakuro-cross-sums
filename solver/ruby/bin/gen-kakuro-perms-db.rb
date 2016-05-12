@@ -64,8 +64,18 @@ class KakuroPermutations
 
     def generate_file(filename)
         fh = File.new(filename, "w")
-        fh.puts("module Kakuro");
-        fh.puts("\tGENERATED_PERMS = {");
+        gen_perl = (ENV['WHAT'] == 'perl')
+        if gen_perl
+            fh.puts("package KakuroPerms;")
+            fh.puts("use strict;")
+            fh.puts("use warnings;")
+            fh.puts("use parent qw/ Exporter /;")
+            fh.puts("our @EXPORT_OK = qw/$GENERATED_PERMS/;")
+            fh.puts("our $GENERATED_PERMS = {")
+        else
+            fh.puts("module Kakuro");
+            fh.puts("\tGENERATED_PERMS = {")
+        end
         (1 .. (@max_digit - @min_digit + 1)).each do |num_places|
             fh.puts(num_places.to_s + " => {")
             (get_min_sum(num_places) .. get_max_sum(num_places)).each do |sum|
@@ -79,7 +89,11 @@ class KakuroPermutations
             fh.puts("},")
         end
         fh.puts("};")
-        fh.puts("end")
+        if gen_perl
+            fh.puts("1;")
+        else
+            fh.puts("end")
+        end
         fh.close()
     end
 end
